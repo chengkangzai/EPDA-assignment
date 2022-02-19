@@ -31,7 +31,6 @@ public class MyRole implements Serializable {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<Permission> permissions;
 
     public MyRole(String name) {

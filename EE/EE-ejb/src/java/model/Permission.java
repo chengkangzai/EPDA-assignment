@@ -30,7 +30,6 @@ public class Permission implements Serializable {
     private Integer id;
     private String name;
     @ManyToMany(mappedBy = "permissions")
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<MyRole> myRoles;
 
     public List<MyRole> getMyRoles() {
