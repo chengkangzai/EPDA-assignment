@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Timeout;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,11 +33,14 @@ public class MyOrder implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdAt;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MyUser purchaseBy;
+
+    @OneToOne(mappedBy = "order")
+    private Delivery delivery;
 
     public MyOrder(List<Product> products, MyUser purchaseBy) {
         this.createdAt = new Date();
@@ -79,9 +83,6 @@ public class MyOrder implements Serializable {
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
     }
-
-    @OneToOne(mappedBy = "order")
-    private Delivery delivery;
 
     public Integer getId() {
         return id;

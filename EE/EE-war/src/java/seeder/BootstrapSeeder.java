@@ -20,14 +20,14 @@ import model.EJB.MyUserFacade;
  *
  * @author CCK
  */
-public class UserManagementSeeder {
+public class BootstrapSeeder {
 
     private final PermissionFacade permissionfacade;
     private final MyUserFacade userFacade;
     private final MyRoleFacade roleFacade;
     
 
-    public UserManagementSeeder(PermissionFacade permissionfacade, MyUserFacade userFacade, MyRoleFacade roleFacade) {
+    public BootstrapSeeder(PermissionFacade permissionfacade, MyUserFacade userFacade, MyRoleFacade roleFacade) {
         this.permissionfacade = permissionfacade;
         this.userFacade = userFacade;
         this.roleFacade = roleFacade;
@@ -37,14 +37,14 @@ public class UserManagementSeeder {
         this.truncate().seedRoles().seedPermissions().seedUser().assignPermissions().assignRole();
     }
 
-    private UserManagementSeeder truncate() {
+    private BootstrapSeeder truncate() {
         this.userFacade.truncate();
         this.permissionfacade.truncate();
         this.roleFacade.truncate();
         return this;
     }
 
-    private UserManagementSeeder seedUser() {
+    private BootstrapSeeder seedUser() {
         ArrayList<MyUser> s = new ArrayList();
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
@@ -54,7 +54,7 @@ public class UserManagementSeeder {
         return this;
     }
 
-    private UserManagementSeeder seedRoles() {
+    private BootstrapSeeder seedRoles() {
         ArrayList<MyRole> s = new ArrayList();
         s.add(new MyRole("Super Admin"));
         s.add(new MyRole("Delivery Staff"));
@@ -64,7 +64,7 @@ public class UserManagementSeeder {
         return this;
     }
 
-    private UserManagementSeeder seedPermissions() {
+    private BootstrapSeeder seedPermissions() {
         this.permissionfacade.truncate();
 
         ArrayList<Permission> p = new ArrayList();
@@ -86,7 +86,7 @@ public class UserManagementSeeder {
         return this;
     }
 
-    private UserManagementSeeder assignPermissions() {
+    private BootstrapSeeder assignPermissions() {
         this.roleFacade.findAll().forEach((MyRole role) -> {
             List<Permission> can = getPermissionWithRole(role);
             role.setPermissions(can);
@@ -138,7 +138,7 @@ public class UserManagementSeeder {
 
     }
 
-    private UserManagementSeeder assignRole() {
+    private BootstrapSeeder assignRole() {
         List<MyRole> roles = this.roleFacade.findAll();
         this.userFacade.findAll().forEach((MyUser x) -> {
             switch (x.getName()) {

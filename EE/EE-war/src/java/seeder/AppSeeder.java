@@ -89,7 +89,7 @@ public class AppSeeder {
         List<Product> products = this.productFacade.findAll();
         List<MyUser> users = this.userFacade.findAll();
 
-        for (int i = 0; i < new Random().nextInt(); i++) {
+        for (int i = 0; i < new Random().nextInt() + 3; i++) {
             Collections.shuffle(products);
             Collections.shuffle(users);
 
@@ -107,7 +107,7 @@ public class AppSeeder {
         ArrayList<Delivery> s = new ArrayList();
         List<MyOrder> orders = this.orderFacade.findAll();
 
-        orders.subList(0, 1).stream().forEach((order) -> {
+        orders.stream().forEach((order) -> {
             Delivery d = new Delivery(Delivery.Status.PENDING, order, order.getPurchaseBy());
             s.add(d);
         });
