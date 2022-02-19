@@ -6,22 +6,56 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 
 /**
  *
  * @author CCK
  */
 @Entity
-public class Role implements Serializable {
+public class MyRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    private String name;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private List<Permission> permissions;
+
+    public MyRole(String name) {
+        this.name = name;
+    }
+
+    public MyRole() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
     public Integer getId() {
         return id;
@@ -41,10 +75,10 @@ public class Role implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Role)) {
+        if (!(object instanceof MyRole)) {
             return false;
         }
-        Role other = (Role) object;
+        MyRole other = (MyRole) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -53,7 +87,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Role[ id=" + id + " ]";
+        return "MyRole{" + "id=" + id + ", name=" + name + ", permissions=" + this.getPermissions() + '}';
     }
-    
+
 }

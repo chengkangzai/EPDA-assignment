@@ -62,7 +62,7 @@ public abstract class AbstractFacade<T> {
     }
 
     public void truncate() {
-        this.findAll().forEach(t -> this.remove(t));
+        this.findAll().forEach(x -> this.remove(x));
     }
 
 }

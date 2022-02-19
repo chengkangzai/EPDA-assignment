@@ -6,7 +6,9 @@
 package model;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +18,7 @@ import javax.persistence.OneToOne;
  *
  * @author CCK
  */
-@Entity
+@Entity()
 public class MyUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,11 +29,10 @@ public class MyUser implements Serializable {
     private String email;
     private String password;
 
-    @OneToOne
-    private Role role;
+    @OneToOne()
+    private MyRole role;
 
-    public MyUser(Integer id, String name, String email, String password) {
-        this.id = id;
+    public MyUser(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -40,11 +41,11 @@ public class MyUser implements Serializable {
     public MyUser() {
     }
 
-    public Role getRole() {
+    public MyRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(MyRole role) {
         this.role = role;
     }
 

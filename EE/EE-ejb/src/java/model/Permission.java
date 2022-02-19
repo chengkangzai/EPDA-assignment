@@ -6,10 +6,16 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -22,7 +28,33 @@ public class Permission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-   
+    private String name;
+    @ManyToMany(mappedBy = "permissions")
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private List<MyRole> myRoles;
+
+    public List<MyRole> getMyRoles() {
+        return myRoles;
+    }
+
+    public void setMyRoles(List<MyRole> myRoles) {
+        this.myRoles = myRoles;
+    }
+
+    public Permission(String name) {
+        this.name = name;
+    }
+
+    public Permission() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -54,7 +86,11 @@ public class Permission implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Permission[ id=" + id + " ]";
+        return "Permission{" + "id=" + id + ", name=" + name + '}';
     }
-    
+
+    public String toHtml() {
+        return this.toString() + "<br>";
+    }
+
 }

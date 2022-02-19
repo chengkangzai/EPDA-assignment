@@ -5,6 +5,7 @@
  */
 package controller;
 
+import seeder.SeederFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -13,7 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyUser;
+import model.PermissionFacade;
+import model.MyRoleFacade;
 import model.MyUserFacade;
 
 /**
@@ -24,7 +26,13 @@ import model.MyUserFacade;
 public class Test extends HttpServlet {
 
     @EJB
-    private MyUserFacade myUserFacade;
+    private PermissionFacade permissionFacade;
+
+    @EJB
+    private MyRoleFacade roleFacade;
+
+    @EJB
+    private MyUserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +46,7 @@ public class Test extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        this.myUserFacade.truncate();
-        MyUser user = new MyUser(1, "Cheng Kang", "pycck@hotmail.com", "password");
-        this.myUserFacade.create(user);
+        new SeederFactory(permissionFacade, userFacade, roleFacade).seed();
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -51,7 +56,15 @@ public class Test extends HttpServlet {
             out.println("<title>Servlet Test</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Test at " + request.getContextPath() + "</h1>");
+            out.println("<h1>My User ... </h1>");
+            this.userFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My role ... </h1>");
+            this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My Permission ... </h1>");
+            this.permissionFacade.findAll().forEach(t -> out.println(t.toHtml()));
+            out.println("<p>------------------</p>");
             out.println("</body>");
             out.println("</html>");
         }
