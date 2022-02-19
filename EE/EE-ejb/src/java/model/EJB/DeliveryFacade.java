@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package model.EJB;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import model.Delivery;
 
 /**
  *
  * @author CCK
  */
 @Stateless
-public class MyUserFacade extends AbstractFacade<MyUser> {
+public class DeliveryFacade extends AbstractFacade<Delivery> {
 
     @PersistenceContext(unitName = "EE-ejbPU")
     private EntityManager em;
@@ -24,8 +25,8 @@ public class MyUserFacade extends AbstractFacade<MyUser> {
         return em;
     }
 
-    public MyUserFacade() {
-        super(MyUser.class);
+    public DeliveryFacade() {
+        super(Delivery.class);
     }
     
 }

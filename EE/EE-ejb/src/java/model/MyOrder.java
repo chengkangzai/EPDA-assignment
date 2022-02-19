@@ -6,41 +6,70 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.Timeout;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 
 /**
  *
  * @author CCK
  */
 @Entity
-public class Rating implements Serializable {
+public class MyOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private Integer star;
 
-    @OneToOne(mappedBy = "rating")
-    private Delivery delivery;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date createdAt;
 
-    public Rating(Integer star) {
-        this.star = star;
+    @OneToMany
+    private List<Product> products;
+
+    @OneToOne
+    private MyUser purchaseBy;
+
+    public MyOrder(List<Product> products, MyUser purchaseBy) {
+        this.createdAt = new Date();
+        this.products = products;
+        this.purchaseBy = purchaseBy;
     }
 
-    public Rating() {
+    public MyOrder() {
+        this.createdAt = new Date();
     }
 
-    public Integer getStar() {
-        return star;
+    public MyUser getPurchaseBy() {
+        return purchaseBy;
     }
 
-    public void setStar(Integer star) {
-        this.star = star;
+    public void setPurchaseBy(MyUser purchaseBy) {
+        this.purchaseBy = purchaseBy;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public Delivery getDelivery() {
@@ -50,6 +79,9 @@ public class Rating implements Serializable {
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
     }
+
+    @OneToOne(mappedBy = "order")
+    private Delivery delivery;
 
     public Integer getId() {
         return id;
@@ -69,10 +101,10 @@ public class Rating implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Rating)) {
+        if (!(object instanceof MyOrder)) {
             return false;
         }
-        Rating other = (Rating) object;
+        MyOrder other = (MyOrder) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -81,7 +113,7 @@ public class Rating implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Rating[ id=" + id + " ]";
+        return "model.Order[ id=" + id + " ]";
     }
 
 }

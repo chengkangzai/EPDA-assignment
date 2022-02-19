@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import model.MyRole;
 import model.MyUser;
 import model.Permission;
-import model.PermissionFacade;
-import model.MyRoleFacade;
-import model.MyUserFacade;
+import model.EJB.PermissionFacade;
+import model.EJB.MyRoleFacade;
+import model.EJB.MyUserFacade;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,13 +20,14 @@ import model.MyUserFacade;
  *
  * @author CCK
  */
-public class SeederFactory {
+public class UserManagementSeeder {
 
     private final PermissionFacade permissionfacade;
     private final MyUserFacade userFacade;
     private final MyRoleFacade roleFacade;
+    
 
-    public SeederFactory(PermissionFacade permissionfacade, MyUserFacade userFacade, MyRoleFacade roleFacade) {
+    public UserManagementSeeder(PermissionFacade permissionfacade, MyUserFacade userFacade, MyRoleFacade roleFacade) {
         this.permissionfacade = permissionfacade;
         this.userFacade = userFacade;
         this.roleFacade = roleFacade;
@@ -36,14 +37,14 @@ public class SeederFactory {
         this.truncate().seedRoles().seedPermissions().seedUser().assignPermissions().assignRole();
     }
 
-    private SeederFactory truncate() {
+    private UserManagementSeeder truncate() {
         this.userFacade.truncate();
         this.permissionfacade.truncate();
         this.roleFacade.truncate();
         return this;
     }
 
-    private SeederFactory seedUser() {
+    private UserManagementSeeder seedUser() {
         ArrayList<MyUser> s = new ArrayList();
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
@@ -53,7 +54,7 @@ public class SeederFactory {
         return this;
     }
 
-    private SeederFactory seedRoles() {
+    private UserManagementSeeder seedRoles() {
         ArrayList<MyRole> s = new ArrayList();
         s.add(new MyRole("Super Admin"));
         s.add(new MyRole("Delivery Staff"));
@@ -63,7 +64,7 @@ public class SeederFactory {
         return this;
     }
 
-    private SeederFactory seedPermissions() {
+    private UserManagementSeeder seedPermissions() {
         this.permissionfacade.truncate();
 
         ArrayList<Permission> p = new ArrayList();
@@ -85,7 +86,7 @@ public class SeederFactory {
         return this;
     }
 
-    private SeederFactory assignPermissions() {
+    private UserManagementSeeder assignPermissions() {
         this.roleFacade.findAll().forEach((MyRole role) -> {
             List<Permission> can = getPermissionWithRole(role);
             role.setPermissions(can);
@@ -137,7 +138,7 @@ public class SeederFactory {
 
     }
 
-    private SeederFactory assignRole() {
+    private UserManagementSeeder assignRole() {
         List<MyRole> roles = this.roleFacade.findAll();
         this.userFacade.findAll().forEach((MyUser x) -> {
             switch (x.getName()) {

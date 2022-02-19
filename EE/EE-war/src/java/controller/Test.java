@@ -5,7 +5,7 @@
  */
 package controller;
 
-import seeder.SeederFactory;
+import seeder.UserManagementSeeder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -14,10 +14,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.PermissionFacade;
-import model.MyRoleFacade;
+import model.EJB.DeliveryFacade;
+import model.EJB.FeedbackFacade;
+import model.EJB.MyOrderFacade;
+import model.EJB.PermissionFacade;
+import model.EJB.MyRoleFacade;
 import model.MyUser;
-import model.MyUserFacade;
+import model.EJB.MyUserFacade;
+import model.EJB.ProductFacade;
+import model.EJB.RatingFacade;
+import seeder.AppSeeder;
 
 /**
  *
@@ -25,6 +31,21 @@ import model.MyUserFacade;
  */
 @WebServlet(name = "Test", urlPatterns = {"/Test"})
 public class Test extends HttpServlet {
+
+    @EJB
+    private MyOrderFacade myOrderFacade;
+
+    @EJB
+    private RatingFacade ratingFacade;
+
+    @EJB
+    private ProductFacade productFacade;
+
+    @EJB
+    private FeedbackFacade feedbackFacade;
+
+    @EJB
+    private DeliveryFacade deliveryFacade;
 
     @EJB
     private PermissionFacade permissionFacade;
@@ -47,7 +68,8 @@ public class Test extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        new SeederFactory(permissionFacade, userFacade, roleFacade).seed();
+        new UserManagementSeeder(permissionFacade, userFacade, roleFacade).seed();
+        new AppSeeder(deliveryFacade, feedbackFacade, productFacade, ratingFacade, userFacade, myOrderFacade).seed();
 
         MyUser user = this.userFacade.findAll().get(1);
         try (PrintWriter out = response.getWriter()) {
@@ -65,11 +87,23 @@ public class Test extends HttpServlet {
             this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
             out.println("<p>------------------</p>");
             out.println("<h1>My Permission ... </h1>");
-            this.permissionFacade.findAll().forEach(t -> out.println(t.toHtml()));
+            this.permissionFacade.findAll().forEach(t -> out.println(t.toString()));
             out.println("<p>------------------</p>");
-            out.println(user.toString());
-            out.println(user.can("Read User"));
-            out.println(user.is("Super Admin"));
+            out.println("<h1>My Rating ... </h1>");
+            this.ratingFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My Feedback ... </h1>");
+            this.feedbackFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My Product ... </h1>");
+            this.productFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My Order ... </h1>");
+            this.myOrderFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
+            out.println("<h1>My Delivery ... </h1>");
+            this.deliveryFacade.findAll().forEach(t -> out.println(t.toString()));
+            out.println("<p>------------------</p>");
             out.println("</body>");
             out.println("</html>");
         }

@@ -22,6 +22,22 @@ public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    private String feedback;
+
+    public Feedback() {
+    }
+
+    public Feedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
 
     public Integer getId() {
         return id;
@@ -55,5 +71,5 @@ public class Feedback implements Serializable {
     public String toString() {
         return "model.Feedback[ id=" + id + " ]";
     }
-    
+
 }
