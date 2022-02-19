@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.PermissionFacade;
 import model.MyRoleFacade;
+import model.MyUser;
 import model.MyUserFacade;
 
 /**
@@ -48,6 +49,7 @@ public class Test extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         new SeederFactory(permissionFacade, userFacade, roleFacade).seed();
 
+        MyUser user = this.userFacade.findAll().get(1);
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
@@ -65,6 +67,9 @@ public class Test extends HttpServlet {
             out.println("<h1>My Permission ... </h1>");
             this.permissionFacade.findAll().forEach(t -> out.println(t.toHtml()));
             out.println("<p>------------------</p>");
+            out.println(user.toString());
+            out.println(user.can("Read User"));
+            out.println(user.is("Super Admin"));
             out.println("</body>");
             out.println("</html>");
         }

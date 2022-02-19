@@ -81,6 +81,14 @@ public class MyUser implements Serializable {
         this.password = password;
     }
 
+    public boolean can(String permission) {
+        return this.role.getPermissions().stream().anyMatch(x -> x.getName().equals(permission));
+    }
+
+    public boolean is(String role) {
+        return this.role.getName().equals(role);
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
