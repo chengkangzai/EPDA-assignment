@@ -11,4 +11,5 @@
         <property name="driverClass" value="org.apache.derby.jdbc.ClientDriver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:module/EE" object-type="user" pool-name="derby_net_EE_Pool"/>
+    <jdbc-resource enabled="true" jndi-name="java:module/TEST" object-type="user" pool-name="derby_net_EE_Pool"/>
 </resources>
