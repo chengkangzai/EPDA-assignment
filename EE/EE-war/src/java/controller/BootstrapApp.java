@@ -29,21 +29,6 @@ import seeder.BootstrapSeeder;
  */
 @WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
 public class BootstrapApp extends HttpServlet {
- @EJB
-    private MyOrderFacade myOrderFacade;
-
-    @EJB
-    private RatingFacade ratingFacade;
-
-    @EJB
-    private ProductFacade productFacade;
-
-    @EJB
-    private FeedbackFacade feedbackFacade;
-
-    @EJB
-    private DeliveryFacade deliveryFacade;
-
     @EJB
     private PermissionFacade permissionFacade;
 
