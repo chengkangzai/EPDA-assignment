@@ -22,11 +22,11 @@ import model.EJB.MyUserFacade;
  *
  * @author CCK
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "Register", urlPatterns = {"/Register"})
+public class Register extends HttpServlet {
 
     @EJB
-    private MyUserFacade myUserFacade;
+    private MyUserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,31 +42,30 @@ public class Login extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         if (request.getMethod().equals("GET")) {
-            SHelper.redirectTo(request, response, "/Login.jsp");
+            SHelper.redirectTo(request, response, "/Register.jsp");
             return;
         }
 
         String email = SHelper.getParam(request, "email");
-        String password = SHelper.getParam(request, "password");
+        String name = SHelper.getParam(request, "name");
+        String param = SHelper.getParam(request, "password");
 
-        if (email.isEmpty() || password.isEmpty() || !Validator.isValidEmail(email)) {
+        if (email.isEmpty() || name.isEmpty() || param.isEmpty() || !Validator.isValidEmail(email)) {
             SHelper.setSession(request, "validation_error", "");
-            System.out.println("Login Servelet: Validation Error");
-            System.out.println("Email :" + email);
-            System.out.println("Password :" + password);
-            SHelper.incldue(request, response, "Login.jsp");
+            System.out.println("Register Servelet: Validation Error");
+            SHelper.incldue(request, response, "Register.jsp");
             return;
         }
 
-        Auth a = new Auth(myUserFacade);
+        Auth a = new Auth(userFacade);
 
-        if (!a.attempLogin(email, password)) {
-            SHelper.setSession(request, "error", "Your credential do not match in the system");
-            System.out.println("Login Servelet: Credential donot match");
-            SHelper.incldue(request, response, "Login.jsp");
+        if (!a.attempRegister(email)) {
+            SHelper.setSession(request, "error", "The Email is being used!");
+            System.out.println("Register Servelet: The Email is being used!");
+            SHelper.incldue(request, response, "Register.jsp");
         } else {
-            SHelper.setSession(request, "user", a.user(email));
-            System.out.println("Login Servelet: Credential match");
+            SHelper.setSession(request, "user", a.register(email, param, name));
+            System.out.println("Register Servelet: User Registered");
             RedirectIfLoggedIn.handle(request, response);
         }
 

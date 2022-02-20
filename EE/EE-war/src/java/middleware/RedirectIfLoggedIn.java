@@ -5,7 +5,7 @@
  */
 package middleware;
 
-import Services.ServletHelper;
+import Services.SHelper;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 public class RedirectIfLoggedIn {
 
     public static void handle(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        String username = ServletHelper.getParam(req, "email");
+        String email = SHelper.getParam(req, "email");
 
-        if (!username.isEmpty()) {
-            System.out.println("redirect user with Email" + username + "To dashboard as it is logged in");
-            ServletHelper.redirectTo(req, res, "/index.html");
+        if (!email.isEmpty()) {
+            System.out.println("redirect user with Email " + email + " To dashboard as it is logged in");
+            SHelper.redirectTo(req, res, "/index.html");
         }
     }
 }

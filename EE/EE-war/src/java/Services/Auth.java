@@ -5,12 +5,6 @@
  */
 package Services;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import model.EJB.MyUserFacade;
 import model.MyUser;
 
@@ -40,5 +34,18 @@ public class Auth {
                 .filter(x -> x.getEmail().equals(email))
                 .findFirst()
                 .get();
+    }
+
+    public boolean attempRegister(String email) {
+        return !this.userFacade.findAll()
+                .stream()
+                .filter(x -> x.getEmail().equals(email))
+                .findFirst()
+                .isPresent();
+    }
+
+    public MyUser register(String email, String password, String name) {
+        this.userFacade.create(new MyUser(name, email, password));
+        return this.user(email);
     }
 }
