@@ -30,7 +30,6 @@
                                     } else if (SHelper.getOnce(request, "error") != null) {
                                         out.println("<div class=\"alert shadow-lg alert-error my-2 \"><div><span>Error! " + request.getSession().getAttribute("error") + ".</span></div></div>");
                                     }
-
                                 %>
 
                                 <form>
@@ -47,7 +46,7 @@
                                         <input type="password" name="password" required class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full" placeholder="Password" style="transition: all 0.15s ease 0s;">
                                     </div>
                                     <div class="text-center mt-6">
-                                        <input type="submit" value="Sign in" class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style="transition: all 0.15s ease 0s;"/>
+                                        <input type="submit" value="Register" class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style="transition: all 0.15s ease 0s;"/>
                                     </div>
                                 </form>
                             </div>
