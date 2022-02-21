@@ -111,4 +111,10 @@ public class MyUser implements Serializable {
     public String toString() {
         return "MyUser{" + "id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role=" + role + '}';
     }
+
+    public String toTd() {
+        return "<tr><td>" + this.getId() + "</td><td>" + this.getName() + 
+                "</td><td>" + this.getEmail() + "</td><td>"
+                + this.getRole().getName() + "</td></tr>";
+    }
 }

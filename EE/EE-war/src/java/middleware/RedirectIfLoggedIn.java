@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RedirectIfLoggedIn {
 
     public static void handle(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        String email = SHelper.getParam(req, "email");
+        String email = (String) SHelper.getParam(req, "email");
 
         if (!email.isEmpty()) {
             System.out.println("redirect user with Email " + email + " To dashboard as it is logged in");

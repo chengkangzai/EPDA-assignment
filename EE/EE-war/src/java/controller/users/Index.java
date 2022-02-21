@@ -3,22 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.Product;
+package controller.users;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import middleware.Gate;
+import model.EJB.MyUserFacade;
+import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Product.Index", urlPatterns = {"/Product/Index"})
+@WebServlet(name = "Users.Index", urlPatterns = {"/Users/Index"})
 public class Index extends HttpServlet {
+
+    @EJB
+    private MyUserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,17 +40,17 @@ public class Index extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+//        Gate.authorise(request, response, "Read User");
+
+        request.getRequestDispatcher("Index.jsp").include(request, response);
+
+        List<MyUser> users = this.userFacade.findAll();
+
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Index</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Index at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            users.forEach(x -> out.println(x.toTd()));
+            
+            out.println("</tbody></table>");
         }
     }
 

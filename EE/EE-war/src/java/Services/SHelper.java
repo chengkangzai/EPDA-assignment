@@ -20,8 +20,8 @@ public class SHelper {
         return req.getParameter(parameter) == null ? "" : req.getParameter(parameter);
     }
 
-    public static void redirectTo(HttpServletRequest req, HttpServletResponse res, String url) throws ServletException, IOException {
-        res.sendRedirect(req.getContextPath() + url);
+    public static void redirectTo(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
+        response.sendRedirect(request.getContextPath() + url);
     }
 
     public static void forward(HttpServletRequest req, HttpServletResponse res, String url) throws ServletException, IOException {
