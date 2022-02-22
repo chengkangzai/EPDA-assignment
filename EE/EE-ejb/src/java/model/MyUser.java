@@ -113,7 +113,7 @@ public class MyUser extends Model implements Serializable {
     }
 
     @Override
-    public String toTd() {
+    public String toTd(MyUser user) {
         return "<tr><td>" + this.getId() + "</td><td>" + this.getName()
                 + "</td><td>" + this.getEmail() + "</td><td>"
                 + this.getRole().getName() + "</td><td class='flex gap-1'>"

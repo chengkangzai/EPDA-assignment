@@ -60,8 +60,8 @@ public class Auth {
         }
     }
 
-    public static boolean can(HttpServletRequest req, String name) {
-        Object u = req.getSession().getAttribute("user");
+    public static boolean can(HttpServletRequest request, String name) {
+        Object u = request.getSession().getAttribute("user");
         if (u == null) {
             return false;
         }

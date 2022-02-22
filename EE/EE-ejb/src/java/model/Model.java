@@ -11,7 +11,7 @@ package model;
  */
 public abstract class Model {
 
-    public abstract String toTd();
+    public abstract String toTd(MyUser user);
 
     public abstract String toSelection();
 

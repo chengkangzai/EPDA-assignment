@@ -5,6 +5,7 @@
  */
 package controller.products;
 
+import Services.Auth;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -27,7 +28,6 @@ public class Index extends HttpServlet {
 
     @EJB
     private ProductFacade userFacade;
-    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,11 +45,11 @@ public class Index extends HttpServlet {
 
         request.getRequestDispatcher("Index.jsp").include(request, response);
 
-        List<Product> users = this.userFacade.findAll();
+        List<Product> products = this.userFacade.findAll();
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            users.forEach(x -> out.println(x.toTd()));
+            products.forEach(x -> out.println(x.toTd(Auth.user(request))));
 
             out.println("</tbody></table>");
         }

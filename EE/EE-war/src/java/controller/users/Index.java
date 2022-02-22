@@ -49,7 +49,7 @@ public class Index extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            users.forEach(x -> out.println(x.toTd()));
+            users.forEach(x -> out.println(x.toTd(Auth.user(request))));
 
             out.println("</tbody></table>");
         }
