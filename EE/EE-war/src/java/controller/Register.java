@@ -5,38 +5,29 @@
  */
 package controller;
 
+import Services.Auth;
+import Services.SHelper;
+import Services.Validator;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.EJB.DeliveryFacade;
-import model.EJB.FeedbackFacade;
-import model.EJB.MyOrderFacade;
-import model.EJB.MyRoleFacade;
+import middleware.RedirectIfLoggedIn;
 import model.EJB.MyUserFacade;
-import model.EJB.PermissionFacade;
-import model.EJB.ProductFacade;
-import model.EJB.RatingFacade;
-import seeder.BootstrapSeeder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
-public class BootstrapApp extends HttpServlet {
-    @EJB
-    private PermissionFacade permissionFacade;
-
-    @EJB
-    private MyRoleFacade roleFacade;
+@WebServlet(name = "Register", urlPatterns = {"/Register"})
+public class Register extends HttpServlet {
 
     @EJB
     private MyUserFacade userFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,28 +40,35 @@ public class BootstrapApp extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Test</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>My User ... </h1>");
-            this.userFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My role ... </h1>");
-            this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My Permission ... </h1>");
-            this.permissionFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("</body>");
-            out.println("</html>");
+        if (request.getMethod().equals("GET")) {
+            SHelper.redirectTo(request, response, "/Register.jsp");
+            return;
         }
+
+        String email = SHelper.getParam(request, "email");
+        String name = SHelper.getParam(request, "name");
+        String param = SHelper.getParam(request, "password");
+
+        if (email.isEmpty() || name.isEmpty() || param.isEmpty() || !Validator.isValidEmail(email)) {
+            SHelper.setSession(request, "validation_error", "");
+            System.out.println("Register Servelet: Validation Error");
+            SHelper.incldue(request, response, "Register.jsp");
+            return;
+        }
+
+        Auth a = new Auth(userFacade);
+
+        if (!a.attempRegister(email)) {
+            SHelper.setSession(request, "error", "The Email is being used!");
+            System.out.println("Register Servelet: The Email is being used!");
+            SHelper.incldue(request, response, "Register.jsp");
+        } else {
+            SHelper.setSession(request, "user", a.register(email, param, name));
+            System.out.println("Register Servelet: User Registered");
+            RedirectIfLoggedIn.handle(request, response);
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

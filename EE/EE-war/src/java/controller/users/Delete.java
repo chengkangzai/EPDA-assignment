@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.users;
 
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -13,30 +14,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.EJB.DeliveryFacade;
-import model.EJB.FeedbackFacade;
-import model.EJB.MyOrderFacade;
-import model.EJB.MyRoleFacade;
+import middleware.Gate;
 import model.EJB.MyUserFacade;
-import model.EJB.PermissionFacade;
-import model.EJB.ProductFacade;
-import model.EJB.RatingFacade;
-import seeder.BootstrapSeeder;
+import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
-public class BootstrapApp extends HttpServlet {
-    @EJB
-    private PermissionFacade permissionFacade;
-
-    @EJB
-    private MyRoleFacade roleFacade;
+@WebServlet(name = "Delete", urlPatterns = {"/Users/Delete"})
+public class Delete extends HttpServlet {
 
     @EJB
     private MyUserFacade userFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,28 +40,17 @@ public class BootstrapApp extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
-
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Test</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>My User ... </h1>");
-            this.userFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My role ... </h1>");
-            this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My Permission ... </h1>");
-            this.permissionFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        Gate.authorise(request, response, "Delete User");
+        
+        String id = SHelper.getParam(request, "id");
+        MyUser user = this.userFacade.findAll()
+                .stream()
+                .filter(x -> x.getId().equals(Integer.parseInt(id)))
+                .findFirst()
+                .get();
+        this.userFacade.remove(user);
+        
+        SHelper.redirectTo(request, response, "/Users/Index");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

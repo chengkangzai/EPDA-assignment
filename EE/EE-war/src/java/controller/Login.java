@@ -5,38 +5,29 @@
  */
 package controller;
 
+import Services.Auth;
+import Services.SHelper;
+import Services.Validator;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.EJB.DeliveryFacade;
-import model.EJB.FeedbackFacade;
-import model.EJB.MyOrderFacade;
-import model.EJB.MyRoleFacade;
+import middleware.RedirectIfLoggedIn;
 import model.EJB.MyUserFacade;
-import model.EJB.PermissionFacade;
-import model.EJB.ProductFacade;
-import model.EJB.RatingFacade;
-import seeder.BootstrapSeeder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
-public class BootstrapApp extends HttpServlet {
-    @EJB
-    private PermissionFacade permissionFacade;
+@WebServlet(name = "Login", urlPatterns = {"/Login"})
+public class Login extends HttpServlet {
 
     @EJB
-    private MyRoleFacade roleFacade;
+    private MyUserFacade myUserFacade;
 
-    @EJB
-    private MyUserFacade userFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,28 +40,36 @@ public class BootstrapApp extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Test</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>My User ... </h1>");
-            this.userFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My role ... </h1>");
-            this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My Permission ... </h1>");
-            this.permissionFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("</body>");
-            out.println("</html>");
+        if (request.getMethod().equals("GET")) {
+            SHelper.redirectTo(request, response, "/Login.jsp");
+            return;
         }
+
+        String email = SHelper.getParam(request, "email");
+        String password = SHelper.getParam(request, "password");
+
+        if (email.isEmpty() || password.isEmpty() || !Validator.isValidEmail(email)) {
+            SHelper.setSession(request, "validation_error", "");
+            System.out.println("Login Servelet: Validation Error");
+            System.out.println("Email :" + email);
+            System.out.println("Password :" + password);
+            SHelper.incldue(request, response, "Login.jsp");
+            return;
+        }
+
+        Auth a = new Auth(myUserFacade);
+
+        if (!a.attempLogin(email, password)) {
+            SHelper.setSession(request, "error", "Your credential do not match in the system");
+            System.out.println("Login Servelet: Credential donot match");
+            SHelper.incldue(request, response, "Login.jsp");
+        } else {
+            SHelper.setSession(request, "user", a.user(email));
+            System.out.println("Login Servelet: Credential match");
+            RedirectIfLoggedIn.handle(request, response);
+        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
