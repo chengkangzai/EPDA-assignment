@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
  * @author CCK
  */
 @Entity()
-public class MyUser implements Serializable {
+public class MyUser extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -112,9 +112,30 @@ public class MyUser implements Serializable {
         return "MyUser{" + "id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", role=" + role + '}';
     }
 
+    @Override
     public String toTd() {
-        return "<tr><td>" + this.getId() + "</td><td>" + this.getName() + 
-                "</td><td>" + this.getEmail() + "</td><td>"
-                + this.getRole().getName() + "</td></tr>";
+        return "<tr><td>" + this.getId() + "</td><td>" + this.getName()
+                + "</td><td>" + this.getEmail() + "</td><td>"
+                + this.getRole().getName() + "</td><td class='flex gap-1'>"
+                + "<a class='btn btn-sm btn-success' href='/EE-war/Users/Show?id=" + this.getId() + "'>Show</a>"
+                + "<a class='btn btn-sm btn-accent' href='/EE-war/Users/Edit?id=" + this.getId() + "'>Edit</a>"
+                + "<a class='btn btn-sm btn-info' href='/EE-war/Users/Delete?id=" + this.getId() + "'>Delete</a>"
+                + "</td></tr>";
     }
+
+    @Override
+    public String toShowTable() {
+        return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
+                + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
+                + "<tr class='border'><td>Name</td><td>" + this.getName() + " </td></tr>"
+                + "<tr class='border'><td>Email</td><td>" + this.getEmail() + " </td></tr>"
+                + "<tr class='border'><td>Role</td><td>" + this.getRole().getName() + " </td></tr>"
+                + "</table></div>";
+    }
+
+    @Override
+    public String toSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -23,6 +23,10 @@ public class SHelper {
     public static void redirectTo(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + url);
     }
+    
+    public static void back(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        response.sendRedirect(request.getHeader("Referer"));
+    }
 
     public static void forward(HttpServletRequest req, HttpServletResponse res, String url) throws ServletException, IOException {
         req.getRequestDispatcher(url).forward(req, res);

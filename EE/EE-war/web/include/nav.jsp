@@ -14,7 +14,7 @@
         <a class="btn btn-ghost uppercase">
             Product
         </a>
-        <a class="btn btn-ghost uppercase" href="Users/Index">
+        <a class="btn btn-ghost uppercase" href="/EE-war/Users/Index">
             User Mngt
         </a>
     </div>

@@ -7,14 +7,11 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 
 /**
@@ -22,7 +19,7 @@ import javax.persistence.ManyToMany;
  * @author CCK
  */
 @Entity
-public class MyRole implements Serializable {
+public class MyRole extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -87,6 +84,21 @@ public class MyRole implements Serializable {
     @Override
     public String toString() {
         return "MyRole{" + "id=" + id + ", name=" + name + ", permissions=" + this.getPermissions() + '}';
+    }
+
+    @Override
+    public String toTd() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toSelection() {
+        return "<option name='" + this.getId() + "'>" + this.getName() + "</option>";
+    }
+
+    @Override
+    public String toShowTable() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
