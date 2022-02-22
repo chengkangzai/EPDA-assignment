@@ -22,13 +22,15 @@ public class Gate {
     public static String FORBIIDEN = "/403.jsp";
 
     public static void authorise(HttpServletRequest req, HttpServletResponse res, String name) throws ServletException, IOException {
-        if (Auth.user(req) == null) {
-            SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
-        }
-
-        if (!Auth.can(req, name)) {
-            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
-        }
+//        if (Auth.user(req) == null) {
+//            SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
+//            return;
+//        }
+//
+//        if (!Auth.can(req, name)) {
+//            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
+//            return;
+//        }
 
     }
 }

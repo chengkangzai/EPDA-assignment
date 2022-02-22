@@ -14,7 +14,7 @@
         <a class="btn btn-ghost uppercase">
             Order
         </a>
-        <a class="btn btn-ghost uppercase">
+        <a class="btn btn-ghost uppercase" href='/EE-war/Products/Index'>
             Product
         </a>
         <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Managing Staff")))) {
