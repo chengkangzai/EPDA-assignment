@@ -4,6 +4,7 @@
     Author     : CCK
 --%>
 
+<%@page import="middleware.Guest"%>
 <%@page import="middleware.Gate"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,6 +15,6 @@
     </head>
     <body>
         <jsp:include page="include/nav.jsp" />
-
+        <% Guest.authorise(request, response);%>
     </body>
 </html>

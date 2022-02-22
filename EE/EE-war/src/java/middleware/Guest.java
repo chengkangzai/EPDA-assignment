@@ -16,21 +16,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author CCK
  */
-public class Gate {
-
+public class Guest {
     public static String UNAUTHORIZED = "/401.jsp";
-    public static String FORBIIDEN = "/403.jsp";
 
-    public static void authorise(HttpServletRequest req, HttpServletResponse res, String name) throws ServletException, IOException {
+    public static void authorise(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         if (Auth.user(req) == null) {
             SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
             return;
         }
-
-        if (!Auth.can(req, name)) {
-            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
-            return;
-        }
-
     }
 }
