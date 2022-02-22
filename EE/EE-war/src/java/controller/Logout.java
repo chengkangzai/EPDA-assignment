@@ -3,30 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller;
 
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import middleware.Gate;
-import model.EJB.MyUserFacade;
-import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Show", urlPatterns = {"/Users/Show"})
-public class Show extends HttpServlet {
-
-    @EJB
-    private MyUserFacade userFacade;
+@WebServlet(name = "Logout", urlPatterns = {"/Logout"})
+public class Logout extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,17 +33,9 @@ public class Show extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Read User");
+        SHelper.setSession(request, "user", null);
         
-        String id = request.getParameter("id");
-        
-        MyUser user = this.userFacade.find(Integer.valueOf(id));
-        
-        request.getRequestDispatcher("Show.jsp").include(request, response);
-
-        try (PrintWriter out = response.getWriter()) {
-            out.println(user.toShowTable());
-        }
+        SHelper.redirectTo(request, response, "/Login");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

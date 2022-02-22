@@ -5,6 +5,7 @@
  */
 package controller.users;
 
+import Services.Auth;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -40,7 +41,7 @@ public class Index extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        Gate.authorise(request, response, "Read User");
+        Gate.authorise(request, response, "Read User");
 
         request.getRequestDispatcher("Index.jsp").include(request, response);
 
@@ -49,7 +50,7 @@ public class Index extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             users.forEach(x -> out.println(x.toTd()));
-            
+
             out.println("</tbody></table>");
         }
     }

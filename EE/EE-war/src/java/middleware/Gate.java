@@ -5,12 +5,12 @@
  */
 package middleware;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyUser;
 
 /**
  *
@@ -18,20 +18,15 @@ import model.MyUser;
  */
 public class Gate {
 
+    public static String UNAUTHORIZED = "/401.jsp";
     public static String FORBIIDEN = "/403.jsp";
 
     public static void authorise(HttpServletRequest req, HttpServletResponse res, String name) throws ServletException, IOException {
-        Object param = req.getSession().getAttribute("user");
-        if (param == null) {
-            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
-            return;
+        if (Auth.user(req) == null) {
+            SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
         }
-        try {
-            MyUser user = (MyUser) param;
-            if (!user.can(name) || !user.is(name)) {
-                SHelper.redirectTo(req, res, Gate.FORBIIDEN);
-            }
-        } catch (NoClassDefFoundError | ClassCastException e) {
+
+        if (!Auth.can(req, name)) {
             SHelper.redirectTo(req, res, Gate.FORBIIDEN);
         }
 

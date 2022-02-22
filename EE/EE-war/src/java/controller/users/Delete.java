@@ -5,9 +5,9 @@
  */
 package controller.users;
 
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,8 +22,8 @@ import model.MyUser;
  *
  * @author CCK
  */
-@WebServlet(name = "Show", urlPatterns = {"/Users/Show"})
-public class Show extends HttpServlet {
+@WebServlet(name = "Delete", urlPatterns = {"/Users/Delete"})
+public class Delete extends HttpServlet {
 
     @EJB
     private MyUserFacade userFacade;
@@ -40,17 +40,17 @@ public class Show extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Read User");
+        Gate.authorise(request, response, "Delete User");
         
-        String id = request.getParameter("id");
+        String id = SHelper.getParam(request, "id");
+        MyUser user = this.userFacade.findAll()
+                .stream()
+                .filter(x -> x.getId().equals(Integer.parseInt(id)))
+                .findFirst()
+                .get();
+        this.userFacade.remove(user);
         
-        MyUser user = this.userFacade.find(Integer.valueOf(id));
-        
-        request.getRequestDispatcher("Show.jsp").include(request, response);
-
-        try (PrintWriter out = response.getWriter()) {
-            out.println(user.toShowTable());
-        }
+        SHelper.redirectTo(request, response, "/Users/Index");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -83,7 +83,7 @@ public class MyRole extends Model implements Serializable {
 
     @Override
     public String toString() {
-        return "MyRole{" + "id=" + id + ", name=" + name + ", permissions=" + this.getPermissions() + '}';
+        return "MyRole{" + "id=" + id + ", name=" + name + ", permissions=" + this.getPermissions() + "}<br>";
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MyRole extends Model implements Serializable {
 
     @Override
     public String toSelection() {
-        return "<option name='" + this.getId() + "'>" + this.getName() + "</option>";
+        return "<option value='" + this.getId() + "'>" + this.getName() + "</option>";
     }
 
     @Override

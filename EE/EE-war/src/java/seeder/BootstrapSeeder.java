@@ -25,7 +25,6 @@ public class BootstrapSeeder {
     private final PermissionFacade permissionfacade;
     private final MyUserFacade userFacade;
     private final MyRoleFacade roleFacade;
-    
 
     public BootstrapSeeder(PermissionFacade permissionfacade, MyUserFacade userFacade, MyRoleFacade roleFacade) {
         this.permissionfacade = permissionfacade;
@@ -114,8 +113,7 @@ public class BootstrapSeeder {
             case "Delivery Staff":
                 return p.stream().filter((x) -> {
                     String name = x.getName();
-                    return name.endsWith("User")
-                            || name.equals("Update Delivery")
+                    return name.equals("Update Delivery")
                             || name.equals("Update Order")
                             || name.equals("Update Profile");
                 })
@@ -123,11 +121,11 @@ public class BootstrapSeeder {
             case "Customer":
                 return p.stream().filter((x) -> {
                     String name = x.getName();
-                    return name.endsWith("User")
-                            || name.endsWith("Order")
+                    return name.endsWith("Order")
                             || name.endsWith("Rating")
                             || name.endsWith("Feedback")
-                            || name.equals("Update Profile");
+                            || name.equals("Update Profile")
+                            || name.equals("Read Product");
                 })
                         .collect(Collectors.toList());
             case "Super Admin":
@@ -149,7 +147,7 @@ public class BootstrapSeeder {
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Customer")).findFirst().get());
                     break;
                 case "Managing Staff":
-                    x.setRole(roles.stream().filter(y -> y.getName().equals("Delivery Staff")).findFirst().get());
+                    x.setRole(roles.stream().filter(y -> y.getName().equals("Managing Staff")).findFirst().get());
                     break;
                 case "Delivery Staff":
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Delivery Staff")).findFirst().get());

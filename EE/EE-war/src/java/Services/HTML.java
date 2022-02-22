@@ -42,19 +42,24 @@ public class HTML {
         return this;
     }
 
-    public HTML input(String type, String name, String placeholder) {
+    public HTML input(String type, String name, String placeholder, String value) {
         this.html = this.html
                 + "<div class='form-control w-full'>"
                 + "  <label class='label'>"
                 + "    <span class='label-text'>" + name + "</span>"
                 + "  </label>"
-                + "  <input required name='" + name.toLowerCase() + "' type='" + type + "' placeholder='" + placeholder + "' class='input input-bordered w-full'>"
+                + "  <input required "
+                + " value='" + value + "' name='" + name.toLowerCase() + "' type='" + type + "' placeholder='" + placeholder + "' class='input input-bordered w-full'>"
                 + "</div>";
         return this;
     }
 
+    public HTML input(String type, String name, String value) {
+        return this.input(type, name, name, value);
+    }
+
     public HTML input(String type, String name) {
-        return this.input(type, name, name);
+        return this.input(type, name, name, "");
     }
 
     public HTML submit(String value) {
@@ -74,6 +79,11 @@ public class HTML {
 
     public HTML form() {
         this.html = this.html + "</form>";
+        return this;
+    }
+
+    public HTML raw(String rawHtml) {
+        this.html = this.html + rawHtml;
         return this;
     }
 

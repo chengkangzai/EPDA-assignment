@@ -10,19 +10,17 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-public class RedirectIfLoggedIn {
-
+public class Guest {
     public static void handle(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        MyUser user = (MyUser) req.getSession().getAttribute("user");
+        String email = (String) SHelper.getParam(req, "email");
 
-        if (user != null) {
-            System.out.println("redirect user with Email " + user + " To dashboard as it is logged in");
+        if (!email.isEmpty()) {
+            System.out.println("redirect user with Email " + email + " To dashboard as it is logged in");
             SHelper.redirectTo(req, res, "/Dashboard.jsp");
         }
     }
