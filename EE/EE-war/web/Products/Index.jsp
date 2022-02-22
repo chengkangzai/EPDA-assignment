@@ -1,3 +1,4 @@
+<%@page import="Services.Auth"%>
 <%@page import="Services.SHelper"%>
 <%@page import="middleware.Gate"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -9,12 +10,16 @@
         <jsp:include page="../include/style.jsp" />
     </head>
     <jsp:include page="../include/nav.jsp" />
-        <% Gate.authorise(request, response, "Read Product");%>
-    
+    <% Gate.authorise(request, response, "Read Product");%>
+
     <div class="flex flex-row-reverse w-4/5">
-        <a class="btn btn-primary" href="/EE-war/Products/Create"> Create Product </a>
+        <% if (Auth.can(request, "Create Product")) {
+                out.println("<a class='btn btn-primary' href='/EE-war/Products/Create'> Create Product </a>");
+            }
+        %>
+
     </div>
-    
+
     <div class="overflow-x-auto">
         <table class="table w-2/3 mx-auto">
             <thead>
@@ -26,6 +31,6 @@
                 </tr>
             </thead>
             <tbody>
-        
-</body>
-</html>
+
+                </body>
+                </html>
