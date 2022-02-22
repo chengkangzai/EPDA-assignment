@@ -26,7 +26,7 @@ import model.MyUser;
  *
  * @author CCK
  */
-@WebServlet(name = "Create", urlPatterns = {"/Users/Create"})
+@WebServlet(name = "Users.Create", urlPatterns = {"/Users/Create"})
 public class Create extends HttpServlet {
 
     @EJB

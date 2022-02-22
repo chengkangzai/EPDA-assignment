@@ -22,7 +22,7 @@ import model.MyUser;
  *
  * @author CCK
  */
-@WebServlet(name = "Delete", urlPatterns = {"/Users/Delete"})
+@WebServlet(name = "Users.Delete", urlPatterns = {"/Users/Delete"})
 public class Delete extends HttpServlet {
 
     @EJB

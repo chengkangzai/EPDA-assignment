@@ -27,7 +27,7 @@ import model.MyUser;
  *
  * @author CCK
  */
-@WebServlet(name = "Edit", urlPatterns = {"/Users/Edit"})
+@WebServlet(name = "Users.Edit", urlPatterns = {"/Users/Edit"})
 public class Edit extends HttpServlet {
 
     @EJB
