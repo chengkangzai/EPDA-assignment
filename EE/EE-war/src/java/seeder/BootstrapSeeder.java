@@ -47,8 +47,14 @@ public class BootstrapSeeder {
         ArrayList<MyUser> s = new ArrayList();
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
+        s.add(new MyUser("Managing Staff 1", "managing1@EE.com", "password"));
+        s.add(new MyUser("Managing Staff 2", "managing2@EE.com", "password"));
         s.add(new MyUser("Delivery Staff", "delivery@EE.com", "password"));
+        s.add(new MyUser("Delivery Staff 1", "delivery1@EE.com", "password"));
+        s.add(new MyUser("Delivery Staff 2", "delivery2@EE.com", "password"));
         s.add(new MyUser("Customer", "customer@EE.com", "password"));
+        s.add(new MyUser("Customer 1", "customer1@EE.com", "password"));
+        s.add(new MyUser("Customer 2", "customer2@EE.com", "password"));
         s.forEach(this.userFacade::create);
         return this;
     }
@@ -68,7 +74,7 @@ public class BootstrapSeeder {
 
         ArrayList<Permission> p = new ArrayList();
         List<String> module = Arrays
-                .asList("User", "Rating", "Feedback", "Product", "Order");
+                .asList("User", "Rating", "Feedback", "Product", "Order", "Delivery");
         List<String> verb = Arrays
                 .asList("Create", "Read", "Update", "Delete");
 
@@ -80,6 +86,11 @@ public class BootstrapSeeder {
         });
 
         p.add(new Permission("Update Profile"));
+
+        //sort the p array list 
+        p.sort((Permission p1, Permission p2) -> {
+            return p1.getName().compareTo(p2.getName());
+        });
 
         p.forEach(this.permissionfacade::create);
         return this;
@@ -145,12 +156,18 @@ public class BootstrapSeeder {
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Super Admin")).findFirst().get());
                     break;
                 case "Customer":
+                case "Customer 1":
+                case "Customer 2":
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Customer")).findFirst().get());
                     break;
                 case "Managing Staff":
+                case "Managing Staff 1":
+                case "Managing Staff 2":
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Managing Staff")).findFirst().get());
                     break;
                 case "Delivery Staff":
+                case "Delivery Staff 1":
+                case "Delivery Staff 2":
                     x.setRole(roles.stream().filter(y -> y.getName().equals("Delivery Staff")).findFirst().get());
                     break;
             }

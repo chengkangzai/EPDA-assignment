@@ -47,7 +47,6 @@ public class HTML {
                 + "<select x-cloak id='select' class='hidden'>"
                 + option
                 + "</select>"
-                + ""
                 + "<div x-data='dropdown()' x-init='loadOptions()' class='w-full flex flex-col h-52 mx-auto'>"
                 + "  <label class='label'>"
                 + "    <span class='label-text'>" + placeholder + "</span>"
@@ -69,7 +68,6 @@ public class HTML {
                 + "                                           l2.651-3.031c0.469-0.469,1.228-0.469,1.697,0s0.469,1.229,0,1.697l-2.758,3.152l2.758,3.15"
                 + "                                           C14.817,13.62,14.817,14.38,14.348,14.849z' />"
                 + "                    </svg>"
-                + ""
                 + "                  </div>"
                 + "                </div>"
                 + "              </div>"
@@ -79,14 +77,12 @@ public class HTML {
                 + "            </div>"
                 + "          </div>"
                 + "          <div class='text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 svelte-1l8159u'>"
-                + ""
                 + "            <button type='button' x-show='isOpen() === true' x-on:click='open' class='cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none'>"
                 + "              <svg version='1.1' class='fill-current h-4 w-4' viewBox='0 0 20 20'>"
                 + "                <path d='M17.418,6.109c0.272-0.268,0.709-0.268,0.979,0s0.271,0.701,0,0.969l-7.908,7.83"
                 + "	c-0.27,0.268-0.707,0.268-0.979,0l-7.908-7.83c-0.27-0.268-0.27-0.701,0-0.969c0.271-0.268,0.709-0.268,0.979,0L10,13.25"
                 + "	L17.418,6.109z' />"
                 + "              </svg>"
-                + ""
                 + "            </button>"
                 + "            <button type='button' x-show='isOpen() === false' @click='close' class='cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none'>"
                 + "              <svg class='fill-current h-4 w-4' viewBox='0 0 20 20'>"
@@ -94,7 +90,6 @@ public class HTML {
                 + "	c0.27-0.268,0.707-0.268,0.979,0l7.908,7.83c0.27,0.268,0.27,0.701,0,0.969c-0.271,0.268-0.709,0.268-0.978,0L10,6.75L2.582,13.891z"
                 + "	' />"
                 + "              </svg>"
-                + ""
                 + "            </button>"
                 + "          </div>"
                 + "        </div>"
@@ -125,6 +120,88 @@ public class HTML {
                 + "  </div>"
                 + "</div>";
         return this;
+    }
+
+    public HTML datePicker(String name, String placehlder, String value) {
+        this.html = this.html
+                + "<div x-data='app()' x-init='[initDate(), getNoOfDays()]' x-cloak>"
+                + "  <div class='container mx-auto'>"
+                + "    <div class='mb-5'>"
+                + "      <label for='datepicker' class='text-sm my-2 block'>" + placehlder + "</label>"
+                + "      <div class='relative'>"
+                + "        <input type='hidden' x-ref='date' :value='datepickerValue' id='datepicker' name='" + name + "'/>"
+                + "        <input type='text' x-on:click='initDate(datepickerValue), showDatepicker = !showDatepicker'"
+                + "               x-model='datepickerValue'"
+                + "               x-on:keydown.escape='showDatepicker = false'"
+                + "               class='border border-gray-300 w-full pl-4 pr-10 py-3 leading-none rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium'"
+                + "               placeholder='" + placehlder + "'/>"
+                + "        <div class='absolute top-0 right-0 px-3 py-2'>"
+                + "          <svg class='w-6 h-6 text-gray-400' fill='none' viewBox='0 0 24 24' stroke='currentColor'>"
+                + "            <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2'"
+                + "                  d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/>"
+                + "          </svg>"
+                + "        </div>"
+                + "        <div class='absolute top-0 left-0 p-4 mt-12 bg-white rounded-lg shadow' style='width: 17rem'"
+                + "             x-show.transition='showDatepicker' @click.away='showDatepicker = false'>"
+                + "          <div class='flex items-center justify-between mb-2'>"
+                + "            <div>"
+                + "              <span x-text='MONTH_NAMES[month]' class='text-lg font-bold text-gray-800'></span>"
+                + "              <span x-text='year' class='ml-1 text-lg font-normal text-gray-600'></span>"
+                + "            </div>"
+                + "            <div>"
+                + "              <button type='button'"
+                + "                      class='inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-none focus:shadow-outline hover:bg-gray-100'"
+                + "                      @click='if (month == 0) { year--; month = 12;} month--; getNoOfDays()'>"
+                + "                <svg class='inline-flex w-6 h-6 text-gray-400' fill='none' viewBox='0 0 24 24'"
+                + "                     stroke='currentColor'>"
+                + "                  <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2'"
+                + "                        d='M15 19l-7-7 7-7'/>"
+                + "                </svg>"
+                + "              </button>"
+                + "              <button type='button'"
+                + "                      class='inline-flex p-1 transition duration-100 ease-in-out rounded-full cursor-pointer focus:outline-none focus:shadow-outline hover:bg-gray-100'"
+                + "                      @click='if (month == 11) {month = 0; year++;} else {month++; } getNoOfDays()'>"
+                + "                <svg class='inline-flex w-6 h-6 text-gray-400' fill='none' viewBox='0 0 24 24'"
+                + "                     stroke='currentColor'>"
+                + "                  <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2'"
+                + "                        d='M9 5l7 7-7 7'/>"
+                + "                </svg>"
+                + "              </button>"
+                + "            </div>"
+                + "          </div>"
+                + "          <div class='flex flex-wrap mb-3 -mx-1'>"
+                + "            <template x-for='(day, index) in DAYS' :key='index'>"
+                + "              <div style='width: 14.26%' class='px-0.5'>"
+                + "                <div x-text='day' class='text-xs font-medium text-center text-gray-800'></div>"
+                + "              </div>"
+                + "            </template>"
+                + "          </div>"
+                + "          <div class='flex flex-wrap -mx-1'>"
+                + "            <template x-for='blankday in blankdays'>"
+                + "              <div style='width: 14.28%' class='p-1 text-sm text-center border border-transparent'></div>"
+                + "            </template>"
+                + "            <template x-for='(date, dateIndex) in no_of_days' :key='dateIndex'>"
+                + "              <div style='width: 14.28%' class='px-1 mb-1'>"
+                + "                <div @click='getDateValue(date)' x-text='date'"
+                + "                     class='text-sm leading-none leading-loose text-center transition duration-100 ease-in-out rounded-full cursor-pointer'"
+                + "                     :class='{"
+                + "                            'bg-indigo-200': isToday(date) == true,"
+                + "                            'text-gray-600 hover:bg-indigo-200': isToday(date) == false && isSelectedDate(date) == false,"
+                + "                            'bg-indigo-500 text-white hover:bg-opacity-75': isSelectedDate(date) == true"
+                + "                        }'></div>"
+                + "              </div>"
+                + "            </template>"
+                + "          </div>"
+                + "        </div>"
+                + "      </div>"
+                + "    </div>"
+                + "  </div>"
+                + "</div>";
+        return this;
+    }
+
+    public HTML datePicker(String name, String placeholder) {
+        return this.datePicker(name, placeholder, "");
     }
 
     public HTML input(String type, String name, String placeholder, String value) {
@@ -170,6 +247,15 @@ public class HTML {
     public HTML raw(String rawHtml) {
         this.html = this.html + rawHtml;
         return this;
+    }
+
+    public HTML divide(String word) {
+        this.html = this.html + "<div class='divider h-1 mb-2 mt-4'>" + word + "</div>";
+        return this;
+    }
+
+    public HTML divide() {
+        return this.divide("");
     }
 
 }

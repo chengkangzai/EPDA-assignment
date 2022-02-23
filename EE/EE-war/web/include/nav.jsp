@@ -7,8 +7,7 @@
     </div>
     <div class="navbar-center">
         <!--Rating,Feedback-->
-
-        <a class="btn btn-ghost uppercase">
+        <a class='btn btn-ghost uppercase' href='/EE-war/Deliveries/Index'>
             Delivery 
         </a>
         <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Create Order", "Read Order", "Update Order", "Delete Order")))) {
