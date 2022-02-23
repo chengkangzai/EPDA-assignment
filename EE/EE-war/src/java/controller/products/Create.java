@@ -3,13 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller.products;
 
 import Services.SHelper;
-import Services.Validator;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,23 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyRoleFacade;
-import model.EJB.MyUserFacade;
-import model.MyRole;
-import model.MyUser;
+import model.EJB.ProductFacade;
+import model.Product;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Create", urlPatterns = {"/Users/Create"})
+@WebServlet(name = "Products.Create", urlPatterns = {"/Products/Create"})
 public class Create extends HttpServlet {
 
     @EJB
-    private MyRoleFacade myRoleFacade;
-
-    @EJB
-    private MyUserFacade userFacade;
+    private ProductFacade productFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,64 +38,25 @@ public class Create extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Create User");
+        Gate.authorise(request, response, "Create Product");
 //Create
         if (request.getMethod().toUpperCase().equals("GET")) {
-            String roles = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""));
-
-            SHelper.setSession(request, "form:roles", roles);
             request.getRequestDispatcher("Create.jsp").include(request, response);
         }
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
             String name = SHelper.getParam(request, "name");
-            String email = SHelper.getParam(request, "email");
-            String password = SHelper.getParam(request, "password");
-            String role = SHelper.getParam(request, "role");
+            String price = SHelper.getParam(request, "price");
 
-            if (role.isEmpty() || name.isEmpty() || email.isEmpty() || password.isEmpty() || !Validator.isValidEmail(email)) {
+            if (name.isEmpty() || price.isEmpty()) {
                 SHelper.setSession(request, "validation_error", name);
                 SHelper.back(request, response);
                 return;
             }
 
-            boolean present = this.userFacade.findAll()
-                    .stream()
-                    .filter(x -> x.getEmail().equals(email))
-                    .findFirst()
-                    .isPresent();
-
-            if (present) {
-                SHelper.setSession(request, "error", "Email taken");
-                SHelper.back(request, response);
-                return;
-            }
-            MyRole assignedRole = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .filter((MyRole x) -> {
-                        return x.getId() == Integer.parseInt(role);
-                    })
-                    .findFirst()
-                    .orElse(this.myRoleFacade
-                            .findAll()
-                            .stream()
-                            .filter(x -> {
-                                return x.getName().equals("Customer");
-                            })
-                            .findFirst()
-                            .get()
-                    );
-
-            MyUser user = new MyUser(name, email, password);
-            user.setRole(assignedRole);
-            this.userFacade.create(user);
-
-            SHelper.redirectTo(request, response, "/Users/Index");
+            Product product = new Product(name, Double.parseDouble(price));
+            this.productFacade.create(product);
+            SHelper.redirectTo(request, response, "/Products/Index");
         }
     }
 

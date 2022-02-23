@@ -5,6 +5,7 @@
  */
 package middleware;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -16,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
  * @author CCK
  */
 public class Guest {
-    public static void handle(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        String email = (String) SHelper.getParam(req, "email");
+    public static String UNAUTHORIZED = "/401.jsp";
 
-        if (!email.isEmpty()) {
-            System.out.println("redirect user with Email " + email + " To dashboard as it is logged in");
-            SHelper.redirectTo(req, res, "/Dashboard.jsp");
+    public static void authorise(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        if (Auth.user(req) == null) {
+            SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
+            return;
         }
     }
 }

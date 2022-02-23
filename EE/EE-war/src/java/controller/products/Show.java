@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller.products;
 
-import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -15,18 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyUserFacade;
-import model.MyUser;
+import model.EJB.ProductFacade;
+import model.Product;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Delete", urlPatterns = {"/Users/Delete"})
-public class Delete extends HttpServlet {
+@WebServlet(name = "Products.Show", urlPatterns = {"/Products/Show"})
+public class Show extends HttpServlet {
 
     @EJB
-    private MyUserFacade userFacade;
+    private ProductFacade productFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,17 +39,17 @@ public class Delete extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Delete User");
-        
-        String id = SHelper.getParam(request, "id");
-        MyUser user = this.userFacade.findAll()
-                .stream()
-                .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                .findFirst()
-                .get();
-        this.userFacade.remove(user);
-        
-        SHelper.redirectTo(request, response, "/Users/Index");
+        Gate.authorise(request, response, "Read Product");
+
+        String id = request.getParameter("id");
+
+        Product product = this.productFacade.find(Integer.valueOf(id));
+
+        request.getRequestDispatcher("Show.jsp").include(request, response);
+
+        try (PrintWriter out = response.getWriter()) {
+            out.println(product.toShowTable());
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

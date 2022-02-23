@@ -22,7 +22,7 @@ import model.MyUser;
  *
  * @author CCK
  */
-@WebServlet(name = "Show", urlPatterns = {"/Users/Show"})
+@WebServlet(name = "Users.Show", urlPatterns = {"/Users/Show"})
 public class Show extends HttpServlet {
 
     @EJB

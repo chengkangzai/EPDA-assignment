@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller.products;
 
-import Services.SHelper;
+import Services.Auth;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,18 +16,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyUserFacade;
-import model.MyUser;
+import model.EJB.ProductFacade;
+import model.Product;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Delete", urlPatterns = {"/Users/Delete"})
-public class Delete extends HttpServlet {
+@WebServlet(name = "Products.Index", urlPatterns = {"/Products/Index"})
+public class Index extends HttpServlet {
 
     @EJB
-    private MyUserFacade userFacade;
+    private ProductFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,17 +41,18 @@ public class Delete extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Delete User");
-        
-        String id = SHelper.getParam(request, "id");
-        MyUser user = this.userFacade.findAll()
-                .stream()
-                .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                .findFirst()
-                .get();
-        this.userFacade.remove(user);
-        
-        SHelper.redirectTo(request, response, "/Users/Index");
+        Gate.authorise(request, response, "Read Product");
+
+        request.getRequestDispatcher("Index.jsp").include(request, response);
+
+        List<Product> products = this.userFacade.findAll();
+
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            products.forEach(x -> out.println(x.toTd(Auth.user(request))));
+
+            out.println("</tbody></table>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

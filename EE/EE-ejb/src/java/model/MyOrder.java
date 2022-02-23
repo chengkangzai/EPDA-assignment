@@ -8,7 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.ejb.Timeout;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ import javax.persistence.Temporal;
  * @author CCK
  */
 @Entity
-public class MyOrder implements Serializable {
+public class MyOrder extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -115,6 +115,40 @@ public class MyOrder implements Serializable {
     @Override
     public String toString() {
         return "model.Order[ id=" + id + " ]";
+    }
+
+    //TODO proper to...
+    @Override
+    public String toTd(MyUser user) {
+        return "<tr>"
+                + "<td>" + this.getId() + "</td>"
+                + "<td>" + this.getProducts().stream().map(x -> x.getName()).collect(Collectors.joining(",")) + "</td>"
+                + "<td>" + this.getPurchaseBy().getName() + "</td>"
+                + "<td>" + this.getCreatedAt().toLocaleString() + "</td>"
+                //                + "<td>" + this.getDelivery().toString() + "</td>"
+                + "<td class='flex gap-1'>"
+                + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
+                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Edit</a>"
+                + "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>"
+                + "</td>"
+                + "</tr>";
+    }
+
+    @Override
+    public String toSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toShowTable() {
+        return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
+                + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
+                + "<tr class='border'><td>Product</td>"
+                + "<td> <ol class='list-disc'>" + this.getProducts().stream().map(x -> "<li>" + x.getName() + " (RM" + x.getPrice() + ") </li>").collect(Collectors.joining())
+                + "</ol> </td>"
+                + "</tr> "
+                + "<tr class='border'> <td>Customer</td> <td>" + this.getPurchaseBy().getName() + "</td> </tr>"
+                + "</table></div>";
     }
 
 }

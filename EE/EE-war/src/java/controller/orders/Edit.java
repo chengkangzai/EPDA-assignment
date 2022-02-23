@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller.orders;
 
+import Services.Auth;
 import Services.SHelper;
-import Services.Validator;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -18,23 +18,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyRoleFacade;
-import model.EJB.MyUserFacade;
-import model.MyRole;
-import model.MyUser;
+import model.EJB.MyOrderFacade;
+import model.EJB.ProductFacade;
+import model.MyOrder;
+import model.Product;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Edit", urlPatterns = {"/Users/Edit"})
+@WebServlet(name = "Orders.Edit", urlPatterns = {"/Orders/Edit"})
 public class Edit extends HttpServlet {
 
     @EJB
-    private MyRoleFacade myRoleFacade;
+    private ProductFacade productFacade;
 
     @EJB
-    private MyUserFacade userFacade;
+    private MyOrderFacade myOrderFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,64 +48,72 @@ public class Edit extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Update User");
-
-//Edit
+        Gate.authorise(request, response, "Update Order");
+// TODO
         if (request.getMethod().toUpperCase().equals("GET")) {
             String id = SHelper.getParam(request, "id");
-            MyUser user = this.userFacade.findAll()
+            MyOrder order = this.myOrderFacade
+                    .findAll()
                     .stream()
                     .filter(x -> x.getId().equals(Integer.parseInt(id)))
                     .findFirst()
                     .get();
-            String roles = this.myRoleFacade
+
+            String products = this.productFacade
                     .findAll()
                     .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""))
-                    .replaceAll("value='" + user.getRole().getId() + "'", "value='" + user.getRole().getId() + "' selected");
-            System.out.println(roles);
-            SHelper.setSession(request, "form:roles", roles);
-            SHelper.setSession(request, "form:user", user);
+                    .map((Product x) -> {
+                        List<Product> orderProduct = order.getProducts();
+                        for (Product op : orderProduct) {
+                            if (op.toSelection().equals(x.toSelection())) {
+                                return op.toSelection().replaceAll("value='" + op.getId() + "'", "value='" + op.getId() + "' selected");
+                            }
+                        }
+                        return x.toSelection();
+                    })
+                    .collect(Collectors.joining(""));
+            System.out.println(products);
+
+            SHelper.setSession(request, "form:products", products);
+            SHelper.setSession(request, "form:order", order);
             request.getRequestDispatcher("Edit.jsp").include(request, response);
         }
-        //Update
+//Store
         if (request.getMethod().toUpperCase().equals("POST")) {
-            String name = SHelper.getParam(request, "name");
-            String email = SHelper.getParam(request, "email");
-            String role = SHelper.getParam(request, "role");
+            String p = SHelper.getParam(request, "products");
 
-            if (role.isEmpty() || name.isEmpty()) {
-                SHelper.setSession(request, "validation_error", name);
+            String[] split = p.split(",");
+            List<Product> products = this.productFacade.findAll()
+                    .stream()
+                    .filter((product) -> {
+                        boolean found = false;
+                        for (String split1 : split) {
+                            if (!found) {
+                                found = product.getId().equals(Integer.parseInt(split1));;
+                            }
+                        }
+                        return found;
+                    })
+                    .collect(Collectors.toList());
+
+            if (products.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
                 return;
             }
 
             String id = SHelper.getParam(request, "id");
-            MyUser user = this.userFacade.findAll()
+            MyOrder order = this.myOrderFacade
+                    .findAll()
                     .stream()
                     .filter(x -> x.getId().equals(Integer.parseInt(id)))
                     .findFirst()
                     .get();
 
-            user.setEmail(email);
-            user.setName(name);
-
-            MyRole assignedRole = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .filter(x -> {
-                        return x.getId() == Integer.parseInt(role);
-                    })
-                    .findFirst()
-                    .orElse(user.getRole());
-
-            user.setRole(assignedRole);
-            this.userFacade.edit(user);
-
-            SHelper.redirectTo(request, response, "/Users/Index");
+            order.setProducts(products);
+            this.myOrderFacade.edit(order);
+            SHelper.redirectTo(request, response, "/Orders/Index");
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

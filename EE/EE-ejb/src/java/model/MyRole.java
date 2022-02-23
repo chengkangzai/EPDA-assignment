@@ -87,7 +87,7 @@ public class MyRole extends Model implements Serializable {
     }
 
     @Override
-    public String toTd() {
+    public String toTd(MyUser user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
