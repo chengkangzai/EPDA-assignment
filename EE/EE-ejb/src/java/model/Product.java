@@ -94,7 +94,7 @@ public class Product extends Model implements Serializable {
 
     @Override
     public String toSelection() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "<option value='" + this.getId() + "'>" + this.getName() + "</option>";
     }
 
     @Override

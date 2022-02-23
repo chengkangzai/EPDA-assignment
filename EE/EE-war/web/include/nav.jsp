@@ -11,9 +11,11 @@
         <a class="btn btn-ghost uppercase">
             Delivery 
         </a>
-        <a class="btn btn-ghost uppercase">
-            Order
-        </a>
+        <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Create Order", "Read Order", "Update Order", "Delete Order")))) {
+                out.println("<a class='btn btn-ghost uppercase' href='/EE-war/Orders/Index'>Order</a>");
+            }
+        %>
+
         <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Create Product", "Read Product", "Update Product", "Delete Product")))) {
                 out.println(" <a class='btn btn-ghost uppercase' href='/EE-war/Products/Index'>Products</a>");
             }

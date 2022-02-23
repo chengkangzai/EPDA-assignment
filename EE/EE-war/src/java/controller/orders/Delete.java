@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.products;
+package controller.orders;
 
 import Services.SHelper;
 import java.io.IOException;
@@ -14,18 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.ProductFacade;
-import model.Product;
+import model.EJB.MyOrderFacade;
+import model.MyOrder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Products.Create", urlPatterns = {"/Products/Create"})
-public class Create extends HttpServlet {
+@WebServlet(name = "Orders.Delete", urlPatterns = {"/Orders/Delete"})
+public class Delete extends HttpServlet {
 
     @EJB
-    private ProductFacade productFacade;
+    private MyOrderFacade myOrderFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,26 +38,18 @@ public class Create extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Create Product");
-//Create
-        if (request.getMethod().toUpperCase().equals("GET")) {
-            request.getRequestDispatcher("Create.jsp").include(request, response);
-        }
-//Store
-        if (request.getMethod().toUpperCase().equals("POST")) {
-            String name = SHelper.getParam(request, "name");
-            String price = SHelper.getParam(request, "price");
+        response.setContentType("text/html;charset=UTF-8");
+         Gate.authorise(request, response, "Delete Order");
 
-            if (name.isEmpty() || price.isEmpty()) {
-                SHelper.setSession(request, "validation_error", name);
-                SHelper.back(request, response);
-                return;
-            }
+        String id = SHelper.getParam(request, "id");
+        MyOrder user = this.myOrderFacade.findAll()
+                .stream()
+                .filter(x -> x.getId().equals(Integer.parseInt(id)))
+                .findFirst()
+                .get();
+        this.myOrderFacade.remove(user);
 
-            Product product = new Product(name, Double.parseDouble(price));
-            this.productFacade.create(product);
-            SHelper.redirectTo(request, response, "/Products/Index");
-        }
+        SHelper.redirectTo(request, response, "/Orders/Index");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.products;
+package controller.orders;
 
-import Services.SHelper;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,18 +14,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.ProductFacade;
-import model.Product;
+import model.EJB.MyOrderFacade;
+import model.MyOrder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Products.Create", urlPatterns = {"/Products/Create"})
-public class Create extends HttpServlet {
+@WebServlet(name = "Orders.Show", urlPatterns = {"/Orders/Show"})
+public class Show extends HttpServlet {
 
     @EJB
-    private ProductFacade productFacade;
+    private MyOrderFacade myOrderFacade;
+
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,25 +40,16 @@ public class Create extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Create Product");
-//Create
-        if (request.getMethod().toUpperCase().equals("GET")) {
-            request.getRequestDispatcher("Create.jsp").include(request, response);
-        }
-//Store
-        if (request.getMethod().toUpperCase().equals("POST")) {
-            String name = SHelper.getParam(request, "name");
-            String price = SHelper.getParam(request, "price");
+        Gate.authorise(request, response, "Read Order");
 
-            if (name.isEmpty() || price.isEmpty()) {
-                SHelper.setSession(request, "validation_error", name);
-                SHelper.back(request, response);
-                return;
-            }
+        String id = request.getParameter("id");
 
-            Product product = new Product(name, Double.parseDouble(price));
-            this.productFacade.create(product);
-            SHelper.redirectTo(request, response, "/Products/Index");
+        MyOrder product = this.myOrderFacade.find(Integer.valueOf(id));
+
+        request.getRequestDispatcher("Show.jsp").include(request, response);
+
+        try (PrintWriter out = response.getWriter()) {
+            out.println(product.toShowTable());
         }
     }
 

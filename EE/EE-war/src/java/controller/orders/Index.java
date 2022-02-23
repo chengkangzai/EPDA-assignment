@@ -3,29 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.products;
+package controller.orders;
 
-import Services.SHelper;
+import Services.Auth;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ejb.EJB;
+import javax.persistence.criteria.Order;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.ProductFacade;
-import model.Product;
+import model.EJB.MyOrderFacade;
+import model.MyOrder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Products.Create", urlPatterns = {"/Products/Create"})
-public class Create extends HttpServlet {
+@WebServlet(name = "Orders.Index", urlPatterns = {"/Orders/Index"})
+public class Index extends HttpServlet {
 
     @EJB
-    private ProductFacade productFacade;
+    private MyOrderFacade myOrderFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,25 +43,17 @@ public class Create extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Create Product");
-//Create
-        if (request.getMethod().toUpperCase().equals("GET")) {
-            request.getRequestDispatcher("Create.jsp").include(request, response);
-        }
-//Store
-        if (request.getMethod().toUpperCase().equals("POST")) {
-            String name = SHelper.getParam(request, "name");
-            String price = SHelper.getParam(request, "price");
+        response.setContentType("text/html;charset=UTF-8");
+        Gate.authorise(request, response, "Read Order");
 
-            if (name.isEmpty() || price.isEmpty()) {
-                SHelper.setSession(request, "validation_error", name);
-                SHelper.back(request, response);
-                return;
-            }
+        request.getRequestDispatcher("Index.jsp").include(request, response);
 
-            Product product = new Product(name, Double.parseDouble(price));
-            this.productFacade.create(product);
-            SHelper.redirectTo(request, response, "/Products/Index");
+        List<MyOrder> products = this.myOrderFacade.findAll();
+
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            products.forEach(x -> out.println(x.toTd(Auth.user(request))));
+            out.println("</tbody></table>");
         }
     }
 

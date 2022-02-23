@@ -71,7 +71,6 @@ public class Auth {
         } catch (NoClassDefFoundError | ClassCastException e) {
             return false;
         }
-
     }
 
     public static boolean canAny(HttpServletRequest req, ArrayList<String> name) {
