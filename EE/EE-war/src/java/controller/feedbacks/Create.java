@@ -65,6 +65,8 @@ public class Create extends HttpServlet {
                 SHelper.redirectTo(request, response, "404.jsp");
                 return;
             }
+            
+//Check if delivery is belong to Customer(CHeck role) and also the customer is same with the delivery customer
 
             this.feedbackFacade.create(new Feedback(feedback, delivery));
             SHelper.back(request, response);

@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
  * @author CCK
  */
 @Entity
-public class Feedback implements Serializable {
+public class Feedback extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -83,6 +83,24 @@ public class Feedback implements Serializable {
     @Override
     public String toString() {
         return "model.Feedback[ id=" + id + " ]";
+    }
+
+    @Override
+    public String toTd(MyUser user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toShowTable() {
+        return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
+                + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
+                + "<tr class='border'><td>Feedback</td> <td>" + this.getFeedback() + "</td></tr>"
+                + "</table></div>";
     }
 
 }
