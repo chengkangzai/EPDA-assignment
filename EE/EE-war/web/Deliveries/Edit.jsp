@@ -22,12 +22,7 @@
         <% Gate.authorise(request, response, "Update Delivery");%>
         <div class="pt-10">
             <h2 class="text-3xl font-bold text-center">Edit Delivery</h2>
-            <% if (SHelper.getOnce(request, "validation_error") != null) {
-                    out.println("<div class=\"alert w-2/3 mx-auto shadow-lg alert-error my-2 \"><div><span>Error! Your form did not pass the validation.</span></div></div>");
-                } else if (SHelper.getOnce(request, "error") != null) {
-                    out.println("<div class=\"alert w-2/3 mx-auto shadow-lg alert-error my-2 \"><div><span>Error! " + request.getSession().getAttribute("error") + ".</span></div></div>");
-                }
-            %>
+            <jsp:include page="../include/alert.jsp" />
             <%
                 String customers = SHelper.getOnce(request, "form:customers").toString();
                 String deliveryStaff = SHelper.getOnce(request, "form:deliveryStaff").toString();

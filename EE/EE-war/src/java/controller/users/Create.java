@@ -8,7 +8,6 @@ package controller.users;
 import Services.SHelper;
 import Services.Validator;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;

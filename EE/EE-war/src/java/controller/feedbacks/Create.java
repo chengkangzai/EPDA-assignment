@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.orders;
+package controller.feedbacks;
 
 import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,18 +14,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyOrderFacade;
-import model.MyOrder;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
+import model.EJB.FeedbackFacade;
+import model.Feedback;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Orders.Show", urlPatterns = {"/Orders/Show"})
-public class Show extends HttpServlet {
+@WebServlet(name = "Feedbacks.Create", urlPatterns = {"/Feedbacks/Create"})
+public class Create extends HttpServlet {
 
     @EJB
-    private MyOrderFacade myOrderFacade;
+    private FeedbackFacade feedbackFacade;
+
+    @EJB
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,16 +43,31 @@ public class Show extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Delete Order");
+        response.setContentType("text/html;charset=UTF-8");
+        Gate.authorise(request, response, "Create Feedback");
 
-        String id = request.getParameter("id");
+        if (request.getMethod().toUpperCase().equals("GET")) {
+            SHelper.redirectTo(request, response, "405.jsp");
+            return;
+        }
 
-        MyOrder order = this.myOrderFacade.find(Integer.valueOf(id));
-        
-        request.getRequestDispatcher("Show.jsp").include(request, response);
+        if (request.getMethod().toUpperCase().equals("POST")) {
+            String feedback = SHelper.getParam(request, "feedback");
+            String id = SHelper.getParam(request, "deliveryId");
+            if (feedback.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
+                SHelper.back(request, response);
+                return;
+            }
 
-        try (PrintWriter out = response.getWriter()) {
-            out.println(order.toShowTable());
+            Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            if (delivery == null) {
+                SHelper.redirectTo(request, response, "404.jsp");
+                return;
+            }
+
+            this.feedbackFacade.create(new Feedback(feedback, delivery));
+            SHelper.back(request, response);
         }
     }
 
