@@ -1,6 +1,6 @@
 <%-- 
-    Document   : Show
-    Created on : Feb 22, 2022, 5:03:04 PM
+    Document   : Index
+    Created on : Feb 23, 2022, 5:31:37 PM
     Author     : CCK
 --%>
 
@@ -11,16 +11,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Orders</title>
+       <title>Deliveries</title>
         <jsp:include page="../include/style.jsp" />
     </head>
     <body>
         <jsp:include page="../include/nav.jsp" />
-        <% Gate.authorise(request, response, "Read Order");%>
-
-        <div class="flex flex-row-reverse w-4/5">
-            <% if (Auth.can(request, "Create Order")) {
-                    out.println("<a class='btn btn-primary' href='/EE-war/Orders/Create'> Create Order </a>");
+        <% Gate.authorise(request, response, "Read Delivery");%>
+          <div class="flex flex-row-reverse w-4/5">
+            <% if (Auth.can(request, "Create Delivery")) {
+                    out.println("<a class='btn btn-primary' href='/EE-war/Deliveries/Create'> Create Delivery </a>");
                 }
             %>
         </div>
@@ -31,12 +30,12 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Products</th>
+                        <th>Status</th>
                         <th>Customer</th>
-                        <th>Created at</th>
+                        <th>Assigned to </th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-</body>
+    </body>
 </html>

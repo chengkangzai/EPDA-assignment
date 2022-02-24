@@ -6,6 +6,11 @@
 package Services;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,10 +26,14 @@ public class SHelper {
     }
 
     public static void redirectTo(HttpServletRequest request, HttpServletResponse response, String url) throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + url);
+        if (response.getHeader("Referer") != null) {
+            response.sendRedirect(request.getContextPath() + url);
+        } else {
+            SHelper.forward(request, response, url);
+        }
     }
-    
-    public static void back(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+    public static void back(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.sendRedirect(request.getHeader("Referer"));
     }
 
@@ -45,6 +54,5 @@ public class SHelper {
         SHelper.setSession(request, parameter, null);
         return temp;
     }
-    
-   
+
 }

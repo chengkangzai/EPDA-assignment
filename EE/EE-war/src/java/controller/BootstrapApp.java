@@ -21,6 +21,7 @@ import model.EJB.MyUserFacade;
 import model.EJB.PermissionFacade;
 import model.EJB.ProductFacade;
 import model.EJB.RatingFacade;
+import seeder.AppSeeder;
 import seeder.BootstrapSeeder;
 
 /**
@@ -29,6 +30,22 @@ import seeder.BootstrapSeeder;
  */
 @WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
 public class BootstrapApp extends HttpServlet {
+
+    @EJB
+    private RatingFacade ratingFacade;
+
+    @EJB
+    private ProductFacade productFacade;
+
+    @EJB
+    private MyOrderFacade myOrderFacade;
+
+    @EJB
+    private FeedbackFacade feedbackFacade;
+
+    @EJB
+    private DeliveryFacade deliveryFacade;
+
     @EJB
     private PermissionFacade permissionFacade;
 
@@ -37,6 +54,7 @@ public class BootstrapApp extends HttpServlet {
 
     @EJB
     private MyUserFacade userFacade;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,7 +67,8 @@ public class BootstrapApp extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
+        new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
+        new AppSeeder(deliveryFacade, feedbackFacade, productFacade, ratingFacade, userFacade, myOrderFacade).seed();
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */

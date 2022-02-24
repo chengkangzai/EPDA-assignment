@@ -3,14 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.orders;
+package controller.deliveries;
 
-import Services.Auth;
-import Services.SHelper;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,23 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyOrderFacade;
-import model.EJB.ProductFacade;
-import model.MyOrder;
-import model.Product;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Orders.Create", urlPatterns = {"/Orders/Create"})
-public class Create extends HttpServlet {
+@WebServlet(name = "Deliveries.Show", urlPatterns = {"/Deliveries/Show"})
+public class Show extends HttpServlet {
 
     @EJB
-    private ProductFacade productFacade;
-
-    @EJB
-    private MyOrderFacade myOrderFacade;
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,46 +39,16 @@ public class Create extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Create Order");
+        Gate.authorise(request, response, "Read Delivery");
+        
+        String id = request.getParameter("id");
+        
+        Delivery delivery = this.deliveryFacade.find(Integer.valueOf(id));
+        
+        request.getRequestDispatcher("Show.jsp").include(request, response);
 
-        if (request.getMethod().toUpperCase().equals("GET")) {
-            String products = this.productFacade
-                    .findAll()
-                    .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""));
-
-            SHelper.setSession(request, "form:products", products);
-
-            request.getRequestDispatcher("Create.jsp").include(request, response);
-        }
-//Store
-        if (request.getMethod().toUpperCase().equals("POST")) {
-
-            String p = SHelper.getParam(request, "products");
-
-            String[] split = p.split(",");
-            List<Product> products = this.productFacade.findAll()
-                    .stream()
-                    .filter((product) -> {
-                        boolean found = false;
-                        for (String split1 : split) {
-                            if (!found) {
-                                found = product.getId().equals(Integer.parseInt(split1));;
-                            }
-                        }
-                        return found;
-                    })
-                    .collect(Collectors.toList());
-            System.out.println(products);
-            if (products.isEmpty()) {
-                SHelper.setSession(request, "validation_error", "");
-                SHelper.back(request, response);
-                return;
-            }
-            MyOrder order = new MyOrder(products, Auth.user(request));
-            this.myOrderFacade.create(order);
-            SHelper.redirectTo(request, response, "/Orders/Index");
+        try (PrintWriter out = response.getWriter()) {
+            out.println(delivery.toShowTable());
         }
     }
 

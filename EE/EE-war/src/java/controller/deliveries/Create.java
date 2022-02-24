@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.orders;
+package controller.deliveries;
 
-import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
@@ -18,23 +16,28 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
 import model.EJB.MyOrderFacade;
-import model.EJB.ProductFacade;
+import model.EJB.MyUserFacade;
 import model.MyOrder;
-import model.Product;
+import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Orders.Edit", urlPatterns = {"/Orders/Edit"})
-public class Edit extends HttpServlet {
-
-    @EJB
-    private ProductFacade productFacade;
+@WebServlet(name = "Deliveries.Create", urlPatterns = {"/Deliveries/Create"})
+public class Create extends HttpServlet {
 
     @EJB
     private MyOrderFacade myOrderFacade;
+
+    @EJB
+    private MyUserFacade myUserFacade;
+
+    @EJB
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,66 +50,53 @@ public class Edit extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Gate.authorise(request, response, "Create Delivery");
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Update Order");
-// TODO
+        //Create
         if (request.getMethod().toUpperCase().equals("GET")) {
-            String id = SHelper.getParam(request, "id");
-            MyOrder order = this.myOrderFacade
-                    .findAll()
+            List<MyUser> users = this.myUserFacade.findAll();
+            String customers = users
                     .stream()
-                    .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                    .findFirst()
-                    .get();
-//Convert update to add on 
-            String products = this.productFacade
-                    .findAll()
-                    .stream()
-                    .filter(x -> !order.getProducts().contains(x))
+                    .filter(x -> x.getRole().getName().equals("Customer"))
                     .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""));
-            System.out.println(products);
+                    .collect(Collectors.joining());
 
-            SHelper.setSession(request, "form:products", products);
-            SHelper.setSession(request, "form:order", order);
-            request.getRequestDispatcher("Edit.jsp").include(request, response);
+            String deliveryStaff = users
+                    .stream()
+                    .filter(x -> x.getRole().getName().equals("Delivery Staff"))
+                    .map(x -> x.toSelection())
+                    .collect(Collectors.joining());
+
+            String orders = this.myOrderFacade.findAll().stream().map(x -> x.toSelection()).collect(Collectors.joining());
+
+            SHelper.setSession(request, "form:customers", customers);
+            SHelper.setSession(request, "form:deliveryStaff", deliveryStaff);
+            SHelper.setSession(request, "form:orders", orders);
+            request.getRequestDispatcher("Create.jsp").include(request, response);
         }
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
-            String p = SHelper.getParam(request, "products");
+            String dt = SHelper.getParam(request, "deliveryTo");
+            String db = SHelper.getParam(request, "deliveryBy");
+            String o = SHelper.getParam(request, "orders");
 
-            String[] split = p.split(",");
-            List<Product> products = this.productFacade.findAll()
-                    .stream()
-                    .filter((product) -> {
-                        boolean found = false;
-                        for (String split1 : split) {
-                            if (!found) {
-                                found = product.getId().equals(Integer.parseInt(split1));;
-                            }
-                        }
-                        return found;
-                    })
-                    .collect(Collectors.toList());
-
-            if (products.isEmpty()) {
+            if (dt.isEmpty() || db.isEmpty() || o.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
                 return;
             }
 
-            String id = SHelper.getParam(request, "id");
-            MyOrder order = this.myOrderFacade
-                    .findAll()
-                    .stream()
-                    .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                    .findFirst()
-                    .get();
+            List<MyUser> users = this.myUserFacade.findAll();
+            MyUser deliveryTo = users.stream().filter(x -> x.getId().equals(Integer.parseInt(dt))).findFirst().get();
+            MyUser deliveryBy = users.stream().filter(x -> x.getId().equals(Integer.parseInt(db))).findFirst().get();
 
-            order.getProducts().addAll(products);
+            MyOrder order = this.myOrderFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(o))).findFirst().get();
 
-            this.myOrderFacade.edit(order);
-            SHelper.redirectTo(request, response, "/Orders/Index");
+            Delivery devliery = new Delivery(Delivery.Status.PENDING, order, deliveryTo, deliveryBy);
+
+            this.deliveryFacade.create(devliery);
+
+            SHelper.redirectTo(request, response, "/Deliveries/Index");
         }
     }
 
