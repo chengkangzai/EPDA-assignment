@@ -58,19 +58,12 @@ public class Edit extends HttpServlet {
                     .filter(x -> x.getId().equals(Integer.parseInt(id)))
                     .findFirst()
                     .get();
-
+//Convert update to add on 
             String products = this.productFacade
                     .findAll()
                     .stream()
-                    .map((Product x) -> {
-                        List<Product> orderProduct = order.getProducts();
-                        for (Product op : orderProduct) {
-                            if (op.toSelection().equals(x.toSelection())) {
-                                return op.toSelection().replaceAll("value='" + op.getId() + "'", "value='" + op.getId() + "' selected");
-                            }
-                        }
-                        return x.toSelection();
-                    })
+                    .filter(x -> !order.getProducts().contains(x))
+                    .map(x -> x.toSelection())
                     .collect(Collectors.joining(""));
             System.out.println(products);
 
@@ -110,7 +103,8 @@ public class Edit extends HttpServlet {
                     .findFirst()
                     .get();
 
-            order.setProducts(products);
+            order.getProducts().addAll(products);
+
             this.myOrderFacade.edit(order);
             SHelper.redirectTo(request, response, "/Orders/Index");
         }

@@ -7,9 +7,10 @@
     </div>
     <div class="navbar-center">
         <!--Rating,Feedback-->
-        <a class='btn btn-ghost uppercase' href='/EE-war/Deliveries/Index'>
-            Delivery 
-        </a>
+        <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Create Delivery", "Read Delivery", "Update Delivery", "Delete Delivery")))) {
+                out.println("<a class='btn btn-ghost uppercase' href='/EE-war/Deliveries/Index'>Delivery</a>");
+            }
+        %>
         <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Create Order", "Read Order", "Update Order", "Delete Order")))) {
                 out.println("<a class='btn btn-ghost uppercase' href='/EE-war/Orders/Index'>Order</a>");
             }

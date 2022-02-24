@@ -48,7 +48,7 @@ public class Create extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Create Product");
+        Gate.authorise(request, response, "Create Order");
 
         if (request.getMethod().toUpperCase().equals("GET")) {
             String products = this.productFacade

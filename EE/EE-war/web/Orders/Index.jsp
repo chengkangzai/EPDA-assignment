@@ -19,7 +19,7 @@
         <% Gate.authorise(request, response, "Read Order");%>
 
         <div class="flex flex-row-reverse w-4/5">
-            <% if (Auth.can(request, "Create Product")) {
+            <% if (Auth.can(request, "Create Order")) {
                     out.println("<a class='btn btn-primary' href='/EE-war/Orders/Create'> Create Order </a>");
                 }
             %>

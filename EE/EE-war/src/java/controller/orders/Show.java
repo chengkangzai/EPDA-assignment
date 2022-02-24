@@ -40,7 +40,7 @@ public class Show extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Read Order");
+        Gate.authorise(request, response, "Delete Order");
 
         String id = request.getParameter("id");
 
