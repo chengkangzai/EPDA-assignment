@@ -44,10 +44,10 @@ public class Delivery extends Model implements Serializable {
     private MyUser deliverBy;
     @OneToOne
     private Rating rating;
-    @OneToOne
-    private Feedback feedback;
 
     private Date deliverAt;
+    @OneToOne(mappedBy = "delivery")
+    private Feedback feedback;
 
     public Delivery(Status status, MyOrder order, MyUser deliverTo, MyUser deliverBy) {
         this.status = status;
@@ -125,7 +125,10 @@ public class Delivery extends Model implements Serializable {
 
     public static String statusToSelection() {
         ArrayList<Status> s = Delivery.getAllStatus();
-        return s.stream().map(x -> "<option value='" + x + "'>" + x + "</option>").collect(Collectors.joining());
+        return s
+                .stream()
+                .map(x -> "<option value='" + x + "'>" + x + "</option>")
+                .collect(Collectors.joining());
     }
 
     public static ArrayList<Status> getAllStatus() {

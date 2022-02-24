@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -24,11 +25,15 @@ public class Feedback implements Serializable {
     private Integer id;
     private String feedback;
 
+    @OneToOne
+    private Delivery delivery;
+
     public Feedback() {
     }
 
-    public Feedback(String feedback) {
+    public Feedback(String feedback, Delivery delivery) {
         this.feedback = feedback;
+        this.delivery = delivery;
     }
 
     public String getFeedback() {
@@ -37,6 +42,14 @@ public class Feedback implements Serializable {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
     }
 
     public Integer getId() {

@@ -25,11 +25,12 @@ public class Rating implements Serializable {
     private Integer id;
     private Integer star;
 
-    @OneToOne(mappedBy = "rating")
-    private Delivery delivery;
+    @OneToOne
+    private Product product;
 
-    public Rating(Integer star) {
+    public Rating(Integer star, Product product) {
         this.star = star;
+        this.product = product;
     }
 
     public Rating() {
@@ -43,12 +44,12 @@ public class Rating implements Serializable {
         this.star = star;
     }
 
-    public Delivery getDelivery() {
-        return delivery;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getId() {
