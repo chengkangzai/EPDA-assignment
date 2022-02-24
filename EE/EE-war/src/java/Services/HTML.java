@@ -19,7 +19,7 @@ public class HTML {
 
     public HTML wrap() {
         this.html = this.html
-                + "<div class='w-1/3 mx-auto'> ";
+                + "<div class='px-4 container lg:w-3/5 mx-auto'> ";
         return this;
     }
 
