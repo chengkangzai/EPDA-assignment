@@ -32,5 +32,9 @@ public class Gate {
             return;
         }
 
+        if (!Auth.user(req).is(name)) {
+            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
+            return;
+        }
     }
 }

@@ -26,6 +26,7 @@
         <div class="flex flex-row-reverse w-4/5">
             <%
                 Delivery delivery = (Delivery) request.getSession().getAttribute("delivery");
+                request.getSession().setAttribute("delivery", null);
                 if (delivery.getFeedback() == null) {
                     out.println(new HTML().wrapModal(
                             "Give Feedback",

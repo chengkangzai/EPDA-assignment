@@ -31,7 +31,7 @@ public class HTML {
     }
 
     public HTML wrapModal(String placeholder, String heading, HTML content) {
-        double random = new Random().hashCode();
+        int random = new Random().nextInt(1000);
         this.html = this.html
                 + "<label for='my-modal-" + random + "' class='btn btn-outline btn-success modal-button'>" + placeholder + "</label>"
                 + "<input type='checkbox' id='my-modal-" + random + "' class='modal-toggle'>"
@@ -40,7 +40,7 @@ public class HTML {
                 + "    <h3 class='font-bold text-lg'>" + heading + "</h3>"
                 + content.getHtml()
                 + "    <div class='modal-action'>"
-                + "      <label for='my-modal' class='btn btn-sm'>Close</label>"
+                + "      <label for='my-modal-" + random + "' class='btn btn-sm'>Close</label>"
                 + "    </div>"
                 + "  </div>"
                 + "</div>";

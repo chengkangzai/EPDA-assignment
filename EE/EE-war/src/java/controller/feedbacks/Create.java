@@ -5,6 +5,7 @@
  */
 package controller.feedbacks;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -52,6 +53,9 @@ public class Create extends HttpServlet {
         }
 
         if (request.getMethod().toUpperCase().equals("POST")) {
+            //Only Customer and Super Admin are allowed
+            Gate.authorise(request, response, "Customer");
+
             String feedback = SHelper.getParam(request, "feedback");
             String id = SHelper.getParam(request, "deliveryId");
             if (feedback.isEmpty()) {
@@ -65,8 +69,11 @@ public class Create extends HttpServlet {
                 SHelper.redirectTo(request, response, "404.jsp");
                 return;
             }
-            
-//Check if delivery is belong to Customer(CHeck role) and also the customer is same with the delivery customer
+
+            if (!delivery.getDeliverTo().equals(Auth.user(request))) {
+                SHelper.redirectTo(request, response, "403.jsp");
+                return;
+            }
 
             this.feedbackFacade.create(new Feedback(feedback, delivery));
             SHelper.back(request, response);

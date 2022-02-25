@@ -114,7 +114,7 @@ public class MyOrder extends Model implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Order[ id=" + id + " ]";
+        return "MyOrder{" + "id=" + id + ", createdAt=" + createdAt + ", products=" + products + ", purchaseBy=" + purchaseBy + ", delivery=" + delivery + '}';
     }
 
     //TODO proper to...

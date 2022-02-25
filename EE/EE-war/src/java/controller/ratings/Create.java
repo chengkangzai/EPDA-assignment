@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.products;
+package controller.ratings;
 
 import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,17 +15,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
 import model.EJB.ProductFacade;
+import model.EJB.RatingFacade;
 import model.Product;
+import model.Rating;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Products.Show", urlPatterns = {"/Products/Show"})
-public class Show extends HttpServlet {
+@WebServlet(name = "Ratings.Create", urlPatterns = {"/Ratings/Create"})
+public class Create extends HttpServlet {
 
     @EJB
     private ProductFacade productFacade;
+
+    @EJB
+    private RatingFacade ratingFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,16 +44,32 @@ public class Show extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Read Product");
+        Gate.authorise(request, response, "Create Rating");
 
-        String id = request.getParameter("id");
+        if (request.getMethod().toUpperCase().equals("GET")) {
+            SHelper.redirectTo(request, response, "405.jsp");
+            return;
+        }
 
-        Product product = this.productFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
-        SHelper.setSession(request, "product", product);
-        request.getRequestDispatcher("Show.jsp").include(request, response);
+        if (request.getMethod().toUpperCase().equals("POST")) {
+            System.out.println("HIT POST");
+            String star = SHelper.getParam(request, "star");
+            String id = SHelper.getParam(request, "productId");
+            if (star.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
+                SHelper.back(request, response);
+                return;
+            }
 
-        try (PrintWriter out = response.getWriter()) {
-            out.println(product.toShowTable());
+            Product product = this.productFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            
+            if (product == null) {
+                SHelper.redirectTo(request, response, "404.jsp");
+                return;
+            }
+
+            this.ratingFacade.create(new Rating(Integer.parseInt(star), product));
+            SHelper.back(request, response);
         }
     }
 

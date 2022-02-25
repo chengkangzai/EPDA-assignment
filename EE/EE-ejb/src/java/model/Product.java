@@ -7,6 +7,7 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class Product extends Model implements Serializable {
     private Integer id;
     private String name;
     private Double price;
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
     private Rating rating;
 
     public Rating getRating() {
