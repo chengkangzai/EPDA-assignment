@@ -5,7 +5,6 @@
  */
 package controller.orders;
 
-import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -44,7 +43,7 @@ public class Show extends HttpServlet {
         String id = request.getParameter("id");
 
         MyOrder order = this.myOrderFacade.find(Integer.valueOf(id));
-        
+
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {
