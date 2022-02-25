@@ -72,8 +72,8 @@ public class AppSeeder {
     private AppSeeder seedFeedback() {
         ArrayList<Feedback> s = new ArrayList();
         List<Delivery> d = this.deliveryfacade.findAll();
-        for (int i = 0; i < 10; i++) {
-            s.add(new Feedback("Feedback " + i, d.get(new Random().nextInt(d.size()))));
+        for (int i = 0; i < d.size(); i++) {
+            s.add(new Feedback("Feedback " + i, d.get(i)));
         }
         s.forEach(this.feedbackfacade::create);
         return this;
