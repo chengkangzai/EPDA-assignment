@@ -3,6 +3,7 @@
     Created on : Feb 20, 2022, 1:27:57 PM
     Author     : CCK
 --%>
+<%@page import="middleware.RedirectIfLoggedIn"%>
 <%@page import="Services.SHelper"%>
 <%@ page session="true" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -14,6 +15,7 @@
         <jsp:include page="include/style.jsp" />
     </head>
     <body>
+        <% RedirectIfLoggedIn.handle(request, response);%>
         <jsp:include page="include/nav.jsp" />
 
         <form action="Login" method="POST" class="block">
