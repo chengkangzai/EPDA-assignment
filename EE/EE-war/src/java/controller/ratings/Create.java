@@ -52,7 +52,6 @@ public class Create extends HttpServlet {
         }
 
         if (request.getMethod().toUpperCase().equals("POST")) {
-            System.out.println("HIT POST");
             String star = SHelper.getParam(request, "star");
             String id = SHelper.getParam(request, "productId");
             if (star.isEmpty()) {

@@ -31,10 +31,5 @@ public class Gate {
             SHelper.redirectTo(req, res, Gate.FORBIIDEN);
             return;
         }
-
-        if (!Auth.user(req).is(name)) {
-            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
-            return;
-        }
     }
 }

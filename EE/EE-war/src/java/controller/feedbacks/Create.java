@@ -53,8 +53,10 @@ public class Create extends HttpServlet {
         }
 
         if (request.getMethod().toUpperCase().equals("POST")) {
-            //Only Customer and Super Admin are allowed
-            Gate.authorise(request, response, "Customer");
+            if (!Auth.user(request).is("Customer")) {
+                SHelper.redirectTo(request, response, "/Dashboard.jsp");
+                return;
+            }
 
             String feedback = SHelper.getParam(request, "feedback");
             String id = SHelper.getParam(request, "deliveryId");
