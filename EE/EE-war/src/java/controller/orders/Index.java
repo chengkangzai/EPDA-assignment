@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.ejb.EJB;
-import javax.persistence.criteria.Order;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,8 +45,12 @@ public class Index extends HttpServlet {
         Gate.authorise(request, response, "Read Order");
 
         request.getRequestDispatcher("Index.jsp").include(request, response);
-
-        List<MyOrder> products = this.myOrderFacade.findAll();
+        List<MyOrder> products;
+        if (Auth.user(request).is("Customer")) {
+            products = this.myOrderFacade.findAll().stream().filter(x -> x.getPurchaseBy().equals(Auth.user(request))).collect(Collectors.toList());
+        } else {
+            products = this.myOrderFacade.findAll();
+        }
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */

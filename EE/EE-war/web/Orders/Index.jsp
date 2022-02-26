@@ -33,6 +33,7 @@
                         <th>ID</th>
                         <th>Products</th>
                         <th>Customer</th>
+                        <th>Delivery Status</th>
                         <th>Created at</th>
                         <th>Action</th>
                     </tr>
