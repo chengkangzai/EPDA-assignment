@@ -8,7 +8,6 @@ package controller.deliveries;
 import Services.SHelper;
 import java.io.IOException;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
@@ -64,15 +63,7 @@ public class Edit extends HttpServlet {
                     .findFirst()
                     .get();
 
-            List<MyUser> users = this.myUserFacade.findAll();
-            String customers = users
-                    .stream()
-                    .filter(x -> x.getRole().getName().equals("Customer"))
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining())
-                    .replaceAll("value='" + delivery.getDeliverTo().getId() + "'", "value='" + delivery.getDeliverTo().getId() + "' selected");
-
-            String deliveryStaff = users
+            String deliveryStaff = this.myUserFacade.findAll()
                     .stream()
                     .filter(x -> x.getRole().getName().equals("Delivery Staff"))
                     .map(x -> x.toSelection())
@@ -89,7 +80,6 @@ public class Edit extends HttpServlet {
             String status = Delivery.statusToSelection()
                     .replaceAll("value='" + delivery.getStatus() + "'", "value='" + delivery.getStatus() + "' selected");
 
-            SHelper.setSession(request, "form:customers", customers);
             SHelper.setSession(request, "form:deliveryStaff", deliveryStaff);
             SHelper.setSession(request, "form:orders", orders);
             SHelper.setSession(request, "form:delivery", delivery);
@@ -113,13 +103,13 @@ public class Edit extends HttpServlet {
             }
 
             List<MyUser> users = this.myUserFacade.findAll();
-            MyUser deliveryTo = users.stream().filter(x -> x.getId().equals(Integer.parseInt(dt))).findFirst().get();
             MyUser deliveryBy = users.stream().filter(x -> x.getId().equals(Integer.parseInt(db))).findFirst().get();
 
             MyOrder order = this.myOrderFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(o))).findFirst().get();
+            
             String id = SHelper.getParam(request, "id");
             Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
-            delivery.setDeliverTo(deliveryTo);
+            
             delivery.setDeliverBy(deliveryBy);
             delivery.setOrder(order);
 

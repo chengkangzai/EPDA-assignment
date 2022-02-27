@@ -20,16 +20,14 @@
         <jsp:include page="../include/nav.jsp" />
         <% Gate.authorise(request, response, "Create Delivery");%>
         <div class="pt-10">
-            <h2 class="text-3xl font-bold text-center">Create new Order</h2>
+            <h2 class="text-3xl font-bold text-center">Create new Delivery</h2>
             <jsp:include page="../include/alert.jsp" />
             <%
-                String customers = SHelper.getOnce(request, "form:customers").toString();
                 String deliveryStaff = SHelper.getOnce(request, "form:deliveryStaff").toString();
                 String orders = SHelper.getOnce(request, "form:orders").toString();
                 out.println(new HTML()
                         .wrap()
                         .form("POST", "/EE-war/Deliveries/Create")
-                        .select("deliveryTo", "Customer", customers)
                         .select("deliveryBy", "Assign to", deliveryStaff)
                         .select("orders", "Order", orders)
                         .submit()

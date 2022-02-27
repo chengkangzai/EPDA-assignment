@@ -52,9 +52,9 @@ public class BootstrapSeeder {
         s.add(new MyUser("Delivery Staff", "delivery@EE.com", "password"));
         s.add(new MyUser("Delivery Staff 1", "delivery1@EE.com", "password"));
         s.add(new MyUser("Delivery Staff 2", "delivery2@EE.com", "password"));
-        s.add(new MyUser("Customer", "customer@EE.com", "password"));
-        s.add(new MyUser("Customer 1", "customer1@EE.com", "password"));
-        s.add(new MyUser("Customer 2", "customer2@EE.com", "password"));
+        s.add(new MyUser("Customer", "customer@EE.com", "password", "TP050000", "Customer Address"));
+        s.add(new MyUser("Customer 1", "customer1@EE.com", "password", "TP050000", "Customer 1 Address"));
+        s.add(new MyUser("Customer 2", "customer2@EE.com", "password", "TP050000", "Customer 2 Address"));
         s.forEach(this.userFacade::create);
         return this;
     }
@@ -138,6 +138,7 @@ public class BootstrapSeeder {
                     return name.endsWith("Order")
                             || name.endsWith("Rating")
                             || name.endsWith("Feedback")
+                            || name.equals("Read Delivery")
                             || name.equals("Update Profile")
                             || name.equals("Read Product");
                 })

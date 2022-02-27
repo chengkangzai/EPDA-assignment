@@ -24,7 +24,6 @@
             <h2 class="text-3xl font-bold text-center">Edit Delivery</h2>
             <jsp:include page="../include/alert.jsp" />
             <%
-                String customers = SHelper.getOnce(request, "form:customers").toString();
                 String deliveryStaff = SHelper.getOnce(request, "form:deliveryStaff").toString();
                 String orders = SHelper.getOnce(request, "form:orders").toString();
                 String status = SHelper.getOnce(request, "form:status").toString();
@@ -32,7 +31,6 @@
                 out.println(new HTML()
                         .wrap()
                         .form("POST", "/EE-war/Deliveries/Edit?id=" + delivery.getId())
-                        .select("deliveryTo", "Customer", customers)
                         .select("deliveryBy", "Assign to", deliveryStaff)
                         .select("orders", "Order", orders)
                         .divide()

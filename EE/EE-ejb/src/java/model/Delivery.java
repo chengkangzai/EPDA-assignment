@@ -36,9 +36,8 @@ public class Delivery extends Model implements Serializable {
 
     @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MyOrder order;
-
-    @OneToOne
-    private MyUser deliverTo;
+    
+    private String deliverTo;
     @OneToOne
     private MyUser deliverBy;
     @OneToOne
@@ -51,7 +50,7 @@ public class Delivery extends Model implements Serializable {
     private Date createdAt;
     private Date deletedAt;
 
-    public Delivery(Status status, MyOrder order, MyUser deliverTo, MyUser deliverBy) {
+    public Delivery(Status status, MyOrder order, String deliverTo, MyUser deliverBy) {
         this.status = status;
         this.order = order;
         this.deliverTo = deliverTo;
@@ -71,11 +70,11 @@ public class Delivery extends Model implements Serializable {
         this.order = order;
     }
 
-    public MyUser getDeliverTo() {
+    public String getDeliverTo() {
         return deliverTo;
     }
 
-    public void setDeliverTo(MyUser deliverTo) {
+    public void setDeliverTo(String deliverTo) {
         this.deliverTo = deliverTo;
     }
 
@@ -203,7 +202,7 @@ public class Delivery extends Model implements Serializable {
     @Override
     public String toTd(MyUser user) {
         return "<tr><td>" + this.getId() + "</td><td>" + this.getStatus()
-                + "</td><td>" + this.getDeliverTo().getName() + "</td>"
+                + "</td><td>" + this.getDeliverTo() + "</td>"
                 + "<td>" + this.getDeliverBy().getName() + "</td>"
                 + "<td class='flex gap-1'>"
                 + (user.can("Read Delivery") ? "<a class='btn btn-sm btn-success' href='/EE-war/Deliveries/Show?id=" + this.getId() + "'>Show</a>" : "")
@@ -222,7 +221,7 @@ public class Delivery extends Model implements Serializable {
         return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
                 + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
                 + "<tr class='border'><td>Status</td><td>" + this.getStatus() + " </td></tr>"
-                + "<tr class='border'><td>Customer</td><td>" + this.getDeliverTo().getName() + " </td></tr>"
+                + "<tr class='border'><td>Customer</td><td>" + this.getDeliverTo() + " </td></tr>"
                 + "<tr class='border'><td>Assigned to </td><td>" + this.getDeliverBy().getName() + " </td></tr>"
                 + "<tr class='border'><td>Order</td><td> Order ID : " + this.getOrder().getId() + " </td></tr>"
                 + (this.getDeliverAt() != null ? "<tr class='border'><td>Created At</td><td>" + this.getDeliverAt().toString() + " </td></tr>" : "")

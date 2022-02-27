@@ -120,7 +120,7 @@ public class AppSeeder {
             Delivery d = new Delivery(
                     status.get(new Random().nextInt(status.size())),
                     order,
-                    customer.get(new Random().nextInt(customer.size())),
+                    order.getPurchaseBy().getAddress(),
                     deliveryStaff.get(new Random().nextInt(deliveryStaff.size()))
             );
             s.add(d);
