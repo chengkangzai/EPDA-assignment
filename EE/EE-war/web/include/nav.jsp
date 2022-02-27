@@ -41,13 +41,12 @@
                 </div>
             </label>
             <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                <% if (Auth.user(request) != null) {
-                        out.println("<li class='cursor-default no-animation'><a>" + Auth.user(request).getName() + "</a></li>");
-                        out.println("<div class='divider h-1 my-2'></div>");
-                    }
-                %>
-                <li><a>Profile</a></li>
-                <li><a>Settings</a></li>
+
+                <li class='cursor-default no-animation'>
+                    <a href='/EE-war/Profile.jsp'> <% out.println(Auth.user(request).getName()); %></a>
+                </li>
+                <div class='divider h-1 my-2'></div>
+                <li><a  href='/EE-war/Profile.jsp'>Profile</a></li>
                 <li><a href="/EE-war/Logout">Logout</a></li>
             </ul>
         </div>
