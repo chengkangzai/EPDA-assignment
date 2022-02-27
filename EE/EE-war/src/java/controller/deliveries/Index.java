@@ -9,6 +9,7 @@ import Services.Auth;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
 import model.Delivery;
 import model.EJB.DeliveryFacade;
+import model.MyUser;
 
 /**
  *
@@ -44,11 +46,24 @@ public class Index extends HttpServlet {
         Gate.authorise(request, response, "Read Delivery");
         request.getRequestDispatcher("Index.jsp").include(request, response);
 
-        List<Delivery> users = this.deliveryFacade.findAll();
+        List<Delivery> deliveries = this.deliveryFacade.findAll();
+
+        MyUser user = Auth.user(request);
+        if (user.is("Customer")) {
+            deliveries = deliveries
+                    .stream()
+                    .filter(x -> x.getOrder().getPurchaseBy().equals(user))
+                    .collect(Collectors.toList());
+        } else if (user.is("Delivery Staff")) {
+            deliveries = deliveries
+                    .stream()
+                    .filter(x -> x.getDeliverBy().equals(user))
+                    .collect(Collectors.toList());
+        } 
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            users.forEach(x -> out.println(x.toTd(Auth.user(request))));
+            deliveries.forEach(x -> out.println(x.toTd(Auth.user(request))));
 
             out.println("</tbody></table>");
         }

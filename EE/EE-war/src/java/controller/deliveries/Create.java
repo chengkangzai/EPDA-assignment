@@ -101,6 +101,8 @@ public class Create extends HttpServlet {
             Delivery devliery = new Delivery(Delivery.Status.PENDING, order, order.getPurchaseBy().getAddress(), deliveryBy);
 
             this.deliveryFacade.create(devliery);
+            order.setDelivery(devliery);
+            this.myOrderFacade.edit(order);
 
             SHelper.redirectTo(request, response, "/Deliveries/Index");
         }

@@ -89,36 +89,38 @@ public class Edit extends HttpServlet {
         }
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
-
-            String dt = SHelper.getParam(request, "deliveryTo");
             String db = SHelper.getParam(request, "deliveryBy");
             String o = SHelper.getParam(request, "orders");
             String s = SHelper.getParam(request, "status");
             String da = SHelper.getParam(request, "deliveryAt");
 
-            if (dt.isEmpty() || db.isEmpty() || o.isEmpty() || s.isEmpty()) {
+            if (db.isEmpty() || o.isEmpty() || s.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
                 return;
             }
+            //TODO if delivered, check deliveryat   
 
             List<MyUser> users = this.myUserFacade.findAll();
             MyUser deliveryBy = users.stream().filter(x -> x.getId().equals(Integer.parseInt(db))).findFirst().get();
 
             MyOrder order = this.myOrderFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(o))).findFirst().get();
-            
+
             String id = SHelper.getParam(request, "id");
             Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
-            
+
             delivery.setDeliverBy(deliveryBy);
             delivery.setOrder(order);
+            delivery.setStatus(Delivery.findStatusByString(s));
 
             if (!da.isEmpty()) {
                 delivery.setDeliverAt(Date.valueOf(da));
             }
 
             this.deliveryFacade.edit(delivery);
-
+            order.setDelivery(delivery);
+            this.myOrderFacade.edit(order);
+            
             // if delivered, make sure it have delivered date
             SHelper.redirectTo(request, response, "/Deliveries/Index");
         }
