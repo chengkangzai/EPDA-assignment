@@ -5,6 +5,8 @@
  */
 package model.EJB;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,14 @@ public class ProductFacade extends AbstractFacade<Product> {
     public ProductFacade() {
         super(Product.class);
     }
-    
+
+    @Override
+    public List<Product> findAll() {
+        return super.findAll().stream().filter(x -> x.getDeletedAt() == null).collect(Collectors.toList());
+    }
+
+    public List<Product> findAllWithTrashed() {
+        return super.findAll();
+    }
+
 }

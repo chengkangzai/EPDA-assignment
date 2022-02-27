@@ -7,6 +7,7 @@ package controller.deliveries;
 
 import Services.SHelper;
 import java.io.IOException;
+import java.sql.Date;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,9 +48,10 @@ public class Delete extends HttpServlet {
                 .findFirst()
                 .get();
 
-       
-        this.deliveryFacade.remove(delivery);
-        SHelper.redirectTo(request, response, "/Orders/Index");
+        delivery.setDeletedAt(new Date(new java.util.Date().getTime()));
+
+        this.deliveryFacade.edit(delivery);
+        SHelper.redirectTo(request, response, "/Deliveries/Index");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -7,6 +7,7 @@ package controller.orders;
 
 import Services.SHelper;
 import java.io.IOException;
+import java.sql.Date;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,8 +48,9 @@ public class Delete extends HttpServlet {
                 .filter(x -> x.getId().equals(Integer.parseInt(id)))
                 .findFirst()
                 .get();
-        this.myOrderFacade.remove(order);
 
+        order.setDeletedAt(new Date(new java.util.Date().getTime()));
+        this.myOrderFacade.edit(order);
         SHelper.redirectTo(request, response, "/Orders/Index");
     }
 

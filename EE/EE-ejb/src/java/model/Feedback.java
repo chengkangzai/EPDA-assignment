@@ -6,7 +6,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -88,15 +87,15 @@ public class Feedback extends Model implements Serializable {
 
     @Override
     public String toTd(MyUser user) {
-         return "<tr>"
+        return "<tr>"
                 + "<td>" + this.getId() + "</td>"
                 + "<td>" + this.getFeedback() + "</td>"
                 + "<td>" + this.getDelivery().getId() + "</td>"
-//                + "<td class='flex gap-1'>"
-//                + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
-//                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>"
-//                + "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>"
-//                + "</td>"
+                //                + "<td class='flex gap-1'>"
+                //                + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
+                //                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>"
+                //                + "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>"
+                //                + "</td>"
                 + "</tr>";
     }
 

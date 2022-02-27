@@ -34,7 +34,7 @@ public class Logout extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         SHelper.setSession(request, "user", null);
-        
+
         SHelper.redirectTo(request, response, "/Login");
     }
 

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author CCK
  */
 public class Guest {
+
     public static String UNAUTHORIZED = "/401.jsp";
 
     public static void authorise(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

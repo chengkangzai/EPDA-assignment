@@ -41,11 +41,11 @@ public class Show extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Read User");
-        
+
         String id = request.getParameter("id");
-        
+
         MyUser user = this.userFacade.find(Integer.valueOf(id));
-        
+
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {
