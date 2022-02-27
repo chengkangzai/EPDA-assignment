@@ -4,6 +4,7 @@
     Author     : CCK
 --%>
 
+<%@page import="model.Delivery.Status"%>
 <%@page import="model.Delivery"%>
 <%@page import="Services.HTML"%>
 <%@page import="middleware.Gate"%>
@@ -27,7 +28,7 @@
             <%
                 Delivery delivery = (Delivery) request.getSession().getAttribute("delivery");
                 request.getSession().setAttribute("delivery", null);
-                if (delivery.getFeedback() == null) {
+                if (delivery.getFeedback() == null && delivery.getStatus() == Delivery.Status.DELIVERED) {
                     out.println(new HTML().wrapModal(
                             "Give Feedback",
                             "What is your feedback on this delivery?",
@@ -41,7 +42,7 @@
             %>
         </div>
         <%
-            if (delivery.getFeedback() != null) {
+            if (delivery.getFeedback() != null && delivery.getStatus() == Delivery.Status.DELIVERED) {
                 out.println("<table class='table w-2/3 mx-auto border mt-2'><tr><td>Feedback</td><td>" + delivery.getFeedback().getFeedback() + "</td></tr></table>");
             }
         %>
