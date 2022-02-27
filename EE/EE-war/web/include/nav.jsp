@@ -31,6 +31,7 @@
 
     </div>
     <div class="navbar-end">
+        <% if (Auth.user(request) != null) { %>
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 <div class="w-6 rounded-full">
@@ -51,5 +52,6 @@
             </ul>
         </div>
     </div>
+    <%}%>
 </div>
 </div>

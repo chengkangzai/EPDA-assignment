@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.RedirectIfLoggedIn;
+import model.EJB.MyRoleFacade;
 import model.EJB.MyUserFacade;
 
 /**
@@ -24,6 +25,9 @@ import model.EJB.MyUserFacade;
  */
 @WebServlet(name = "Register", urlPatterns = {"/Register"})
 public class Register extends HttpServlet {
+
+    @EJB
+    private MyRoleFacade myRoleFacade;
 
     @EJB
     private MyUserFacade userFacade;
@@ -57,7 +61,7 @@ public class Register extends HttpServlet {
             return;
         }
 
-        Auth a = new Auth(userFacade);
+        Auth a = new Auth(userFacade, myRoleFacade);
 
         if (!a.attempRegister(email)) {
             SHelper.setSession(request, "error", "The Email is being used!");
@@ -65,8 +69,9 @@ public class Register extends HttpServlet {
             SHelper.incldue(request, response, "Register.jsp");
         } else {
             SHelper.setSession(request, "user", a.register(email, param, name));
+
             System.out.println("Register Servelet: User Registered");
-            RedirectIfLoggedIn.handle(request, response);
+            SHelper.redirectTo(request, response, "/Dashboard.jsp");
         }
 
     }

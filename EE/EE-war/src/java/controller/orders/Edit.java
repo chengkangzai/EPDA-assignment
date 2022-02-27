@@ -5,10 +5,8 @@
  */
 package controller.orders;
 
-import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
@@ -74,7 +72,11 @@ public class Edit extends HttpServlet {
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
             String p = SHelper.getParam(request, "products");
-
+            if (p.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
+                SHelper.back(request, response);
+                return;
+            }
             String[] split = p.split(",");
             List<Product> products = this.productFacade.findAll()
                     .stream()

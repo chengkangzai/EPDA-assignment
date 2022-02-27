@@ -7,8 +7,9 @@ package Services;
 
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import model.EJB.MyRoleFacade;
 import model.EJB.MyUserFacade;
+import model.MyRole;
 import model.MyUser;
 
 /**
@@ -18,9 +19,15 @@ import model.MyUser;
 public class Auth {
 
     private MyUserFacade userFacade;
+    private MyRoleFacade roleFacade;
 
     public Auth(MyUserFacade userFacade) {
         this.userFacade = userFacade;
+    }
+
+    public Auth(MyUserFacade userFacade, MyRoleFacade roleFacade) {
+        this.userFacade = userFacade;
+        this.roleFacade = roleFacade;
     }
 
     public boolean attempLogin(String email, String password) {
@@ -48,7 +55,10 @@ public class Auth {
     }
 
     public MyUser register(String email, String password, String name) {
-        this.userFacade.create(new MyUser(name, email, password));
+        MyRole role = this.roleFacade.findAll().stream().filter(x -> x.getName().equals("Customer")).findFirst().get();
+        MyUser u = new MyUser(name, email, password);
+        u.setRole(role);
+        this.userFacade.create(u);
         return this.user(email);
     }
 
