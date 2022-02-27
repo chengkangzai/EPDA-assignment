@@ -5,6 +5,7 @@
  */
 package controller.deliveries;
 
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -40,11 +41,11 @@ public class Show extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Read Delivery");
-        
+
         String id = request.getParameter("id");
-        
+
         Delivery delivery = this.deliveryFacade.find(Integer.valueOf(id));
-        
+        SHelper.setSession(request, "delivery", delivery);
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {

@@ -7,9 +7,11 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -24,6 +26,16 @@ public class Product extends Model implements Serializable {
     private Integer id;
     private String name;
     private Double price;
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
+    private Rating rating;
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
 
     public Product(String name, Double price) {
         this.name = name;

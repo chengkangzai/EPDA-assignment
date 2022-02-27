@@ -39,15 +39,15 @@ public class Delete extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         Gate.authorise(request, response, "Delete Order");
+        Gate.authorise(request, response, "Delete Order");
 
         String id = SHelper.getParam(request, "id");
-        MyOrder user = this.myOrderFacade.findAll()
+        MyOrder order = this.myOrderFacade.findAll()
                 .stream()
                 .filter(x -> x.getId().equals(Integer.parseInt(id)))
                 .findFirst()
                 .get();
-        this.myOrderFacade.remove(user);
+        this.myOrderFacade.remove(order);
 
         SHelper.redirectTo(request, response, "/Orders/Index");
     }

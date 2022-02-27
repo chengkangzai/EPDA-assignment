@@ -3,34 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.feedbacks;
 
 import Services.Auth;
-import Services.SHelper;
-import Services.Validator;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import middleware.RedirectIfLoggedIn;
-import model.EJB.MyRoleFacade;
-import model.EJB.MyUserFacade;
+import middleware.Gate;
+import model.EJB.FeedbackFacade;
+
+import model.Feedback;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Register", urlPatterns = {"/Register"})
-public class Register extends HttpServlet {
+@WebServlet(name = "Feedbacks.Index", urlPatterns = {"/Feedbacks/Index"})
+public class Index extends HttpServlet {
 
     @EJB
-    private MyRoleFacade myRoleFacade;
+    private FeedbackFacade feedbackFacade;
 
-    @EJB
-    private MyUserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,36 +43,18 @@ public class Register extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        Gate.authorise(request, response, "Read Feedback");
 
-        if (request.getMethod().equals("GET")) {
-            SHelper.redirectTo(request, response, "/Register.jsp");
-            return;
+        request.getRequestDispatcher("Index.jsp").include(request, response);
+
+        List<Feedback> feedbacks = this.feedbackFacade.findAll();
+
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            feedbacks.forEach(x -> out.println(x.toTd(Auth.user(request))));
+
+            out.println("</tbody></table>");
         }
-
-        String email = SHelper.getParam(request, "email");
-        String name = SHelper.getParam(request, "name");
-        String param = SHelper.getParam(request, "password");
-
-        if (email.isEmpty() || name.isEmpty() || param.isEmpty() || !Validator.isValidEmail(email)) {
-            SHelper.setSession(request, "validation_error", "");
-            System.out.println("Register Servelet: Validation Error");
-            SHelper.incldue(request, response, "Register.jsp");
-            return;
-        }
-
-        Auth a = new Auth(userFacade, myRoleFacade);
-
-        if (!a.attempRegister(email)) {
-            SHelper.setSession(request, "error", "The Email is being used!");
-            System.out.println("Register Servelet: The Email is being used!");
-            SHelper.incldue(request, response, "Register.jsp");
-        } else {
-            SHelper.setSession(request, "user", a.register(email, param, name));
-
-            System.out.println("Register Servelet: User Registered");
-            SHelper.redirectTo(request, response, "/Dashboard.jsp");
-        }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

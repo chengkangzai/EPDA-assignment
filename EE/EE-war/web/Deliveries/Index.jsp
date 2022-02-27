@@ -11,13 +11,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-       <title>Deliveries</title>
+        <title>Deliveries</title>
         <jsp:include page="../include/style.jsp" />
     </head>
     <body>
         <jsp:include page="../include/nav.jsp" />
         <% Gate.authorise(request, response, "Read Delivery");%>
-          <div class="flex flex-row-reverse w-4/5">
+        <div class="flex flex-row-reverse w-4/5">
             <% if (Auth.can(request, "Create Delivery")) {
                     out.println("<a class='btn btn-primary' href='/EE-war/Deliveries/Create'> Create Delivery </a>");
                 }
@@ -37,5 +37,5 @@
                     </tr>
                 </thead>
                 <tbody>
-    </body>
-</html>
+                    </body>
+                    </html>

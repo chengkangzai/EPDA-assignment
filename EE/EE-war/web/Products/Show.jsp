@@ -4,6 +4,8 @@
     Author     : CCK
 --%>
 
+<%@page import="model.Product"%>
+<%@page import="Services.HTML"%>
 <%@page import="middleware.Gate"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,5 +22,45 @@
         <div class="pt-10">
             <h2 class="text-3xl font-bold text-center">View Product Details</h2>
         </div>
+        <div class="flex flex-row-reverse w-4/5">
+            <%
+                Product product = (Product) request.getSession().getAttribute("product");
+                request.getSession().setAttribute("product", null);
+                
+                if (product.getRating() == null) {
+                    out.println(new HTML().wrapModal(
+                            "Rating this product",
+                            "How many star you wanna give to this product?",
+                            new HTML()
+                                    .form("POST", "/EE-war/Ratings/Create?productId=" + product.getId())
+                                    .raw(
+                                            "<div class='form-control w-full'>"
+                                            + "  <label class='label'>"
+                                            + "    <span class='label-text'>Rating</span>"
+                                            + "  </label>"
+                                            + "  <input required name='star' type='number' placeholder='Rating' class='input input-bordered w-full' min=1 max=5>"
+                                            + "</div>"
+                                    )
+                                    .submit()
+                                    .form()
+                    ).getHtml());
+                }
+            %>
+        </div>
+        <%
+            if (product.getRating() != null) {
+                out.println("<table class='table w-2/3 mx-auto border mt-2'><tr><td>Rating</td><td>");
+                out.println("<div class='rating'>");
+                Integer star = product.getRating().getStar();
+                for (int i = 1; i <= 5; i++) {
+                    if (i <= star) {
+                        out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400' checked>");
+                    } else {
+                        out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400'>");
+                    }
+                }
+                out.println("</div></td></table>");
+            }
+        %>
     </body>
 </html>

@@ -31,6 +31,5 @@ public class Gate {
             SHelper.redirectTo(req, res, Gate.FORBIIDEN);
             return;
         }
-
     }
 }

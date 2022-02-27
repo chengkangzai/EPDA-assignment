@@ -27,8 +27,6 @@ public class Show extends HttpServlet {
     @EJB
     private MyOrderFacade myOrderFacade;
 
-
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,12 +42,12 @@ public class Show extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        MyOrder product = this.myOrderFacade.find(Integer.valueOf(id));
+        MyOrder order = this.myOrderFacade.find(Integer.valueOf(id));
 
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {
-            out.println(product.toShowTable());
+            out.println(order.toShowTable());
         }
     }
 

@@ -61,8 +61,9 @@ public class AppSeeder {
 
     private AppSeeder seedRating() {
         ArrayList<Rating> s = new ArrayList();
+        List<Product> p = this.productFacade.findAll();
         for (int i = 0; i < new Random().nextInt(15); i++) {
-            s.add(new Rating(new Random().nextInt(5)));
+            s.add(new Rating(new Random().nextInt(5), p.get(new Random().nextInt(p.size()))));
         }
         s.forEach(this.ratingFacade::create);
         return this;
@@ -70,8 +71,9 @@ public class AppSeeder {
 
     private AppSeeder seedFeedback() {
         ArrayList<Feedback> s = new ArrayList();
-        for (int i = 0; i < 10; i++) {
-            s.add(new Feedback("Feedback " + i));
+        List<Delivery> d = this.deliveryfacade.findAll();
+        for (int i = 0; i < d.size(); i++) {
+            s.add(new Feedback("Feedback " + i, d.get(i)));
         }
         s.forEach(this.feedbackfacade::create);
         return this;

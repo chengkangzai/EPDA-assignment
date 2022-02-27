@@ -6,17 +6,19 @@
 package model;
 
 import java.io.Serializable;
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author CCK
  */
 @Entity
-public class Feedback implements Serializable {
+public class Feedback extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -24,11 +26,15 @@ public class Feedback implements Serializable {
     private Integer id;
     private String feedback;
 
+    @OneToOne
+    private Delivery delivery;
+
     public Feedback() {
     }
 
-    public Feedback(String feedback) {
+    public Feedback(String feedback, Delivery delivery) {
         this.feedback = feedback;
+        this.delivery = delivery;
     }
 
     public String getFeedback() {
@@ -37,6 +43,14 @@ public class Feedback implements Serializable {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
     }
 
     public Integer getId() {
@@ -72,4 +86,28 @@ public class Feedback implements Serializable {
         return "model.Feedback[ id=" + id + " ]";
     }
 
+    @Override
+    public String toTd(MyUser user) {
+         return "<tr>"
+                + "<td>" + this.getId() + "</td>"
+                + "<td>" + this.getFeedback() + "</td>"
+                + "<td>" + this.getDelivery().getId() + "</td>"
+//                + "<td class='flex gap-1'>"
+//                + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
+//                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>"
+//                + "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>"
+//                + "</td>"
+                + "</tr>";
+    }
+
+    @Override
+    public String toSelection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toShowTable() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    }
+
+    }
 }

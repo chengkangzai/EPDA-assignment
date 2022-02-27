@@ -5,6 +5,7 @@
  */
 package controller.products;
 
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -43,8 +44,8 @@ public class Show extends HttpServlet {
 
         String id = request.getParameter("id");
 
-        Product product = this.productFacade.find(Integer.valueOf(id));
-
+        Product product = this.productFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+        SHelper.setSession(request, "product", product);
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {

@@ -16,14 +16,7 @@
     </head>
     <body>
         <jsp:include page="../include/nav.jsp" />
-        <% Gate.authorise(request, response, "Read Order");%>
-
-        <div class="flex flex-row-reverse w-4/5">
-            <% if (Auth.can(request, "Create Order")) {
-                    out.println("<a class='btn btn-primary' href='/EE-war/Orders/Create'> Create Order </a>");
-                }
-            %>
-        </div>
+        <% Gate.authorise(request, response, "Read Feedback");%>
 
         <div class="overflow-x-auto">
             <table class="table w-2/3 mx-auto">
@@ -31,11 +24,8 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Products</th>
-                        <th>Customer</th>
-                        <th>Delivery Status</th>
-                        <th>Created at</th>
-                        <th>Action</th>
+                        <th>Feedback</th>
+                        <th>Delivery</th>
                     </tr>
                 </thead>
                 <tbody>

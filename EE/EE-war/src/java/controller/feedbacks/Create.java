@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller.feedbacks;
 
+import Services.Auth;
 import Services.SHelper;
-import Services.Validator;
 import java.io.IOException;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,23 +15,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyRoleFacade;
-import model.EJB.MyUserFacade;
-import model.MyRole;
-import model.MyUser;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
+import model.EJB.FeedbackFacade;
+import model.Feedback;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Create", urlPatterns = {"/Users/Create"})
+@WebServlet(name = "Feedbacks.Create", urlPatterns = {"/Feedbacks/Create"})
 public class Create extends HttpServlet {
 
     @EJB
-    private MyRoleFacade myRoleFacade;
+    private FeedbackFacade feedbackFacade;
 
     @EJB
-    private MyUserFacade userFacade;
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,64 +44,41 @@ public class Create extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Gate.authorise(request, response, "Create User");
-//Create
+        response.setContentType("text/html;charset=UTF-8");
+        Gate.authorise(request, response, "Create Feedback");
+
         if (request.getMethod().toUpperCase().equals("GET")) {
-            String roles = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""));
-
-            SHelper.setSession(request, "form:roles", roles);
-            request.getRequestDispatcher("Create.jsp").include(request, response);
+            SHelper.redirectTo(request, response, "405.jsp");
+            return;
         }
-//Store
+
         if (request.getMethod().toUpperCase().equals("POST")) {
-            String name = SHelper.getParam(request, "name");
-            String email = SHelper.getParam(request, "email");
-            String password = SHelper.getParam(request, "password");
-            String role = SHelper.getParam(request, "role");
+            if (!Auth.user(request).is("Customer")) {
+                SHelper.redirectTo(request, response, "/Dashboard.jsp");
+                return;
+            }
 
-            if (role.isEmpty() || name.isEmpty() || email.isEmpty() || password.isEmpty() || !Validator.isValidEmail(email)) {
-                SHelper.setSession(request, "validation_error", name);
+            String feedback = SHelper.getParam(request, "feedback");
+            String id = SHelper.getParam(request, "deliveryId");
+            if (feedback.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
                 return;
             }
 
-            boolean present = this.userFacade.findAll()
-                    .stream()
-                    .filter(x -> x.getEmail().equals(email))
-                    .findFirst()
-                    .isPresent();
-
-            if (present) {
-                SHelper.setSession(request, "error", "Email taken");
-                SHelper.back(request, response);
+            Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            if (delivery == null) {
+                SHelper.redirectTo(request, response, "404.jsp");
                 return;
             }
-            MyRole assignedRole = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .filter((MyRole x) -> {
-                        return x.getId() == Integer.parseInt(role);
-                    })
-                    .findFirst()
-                    .orElse(this.myRoleFacade
-                            .findAll()
-                            .stream()
-                            .filter(x -> {
-                                return x.getName().equals("Customer");
-                            })
-                            .findFirst()
-                            .get()
-                    );
 
-            MyUser user = new MyUser(name, email, password);
-            user.setRole(assignedRole);
-            this.userFacade.create(user);
+            if (!delivery.getDeliverTo().equals(Auth.user(request))) {
+                SHelper.redirectTo(request, response, "403.jsp");
+                return;
+            }
 
-            SHelper.redirectTo(request, response, "/Users/Index");
+            this.feedbackFacade.create(new Feedback(feedback, delivery));
+            SHelper.back(request, response);
         }
     }
 
