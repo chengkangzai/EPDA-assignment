@@ -41,7 +41,7 @@ public class Delete extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Delete User");
-        
+
         String id = SHelper.getParam(request, "id");
         MyUser user = this.userFacade.findAll()
                 .stream()
@@ -49,7 +49,7 @@ public class Delete extends HttpServlet {
                 .findFirst()
                 .get();
         this.userFacade.remove(user);
-        
+
         SHelper.redirectTo(request, response, "/Users/Index");
     }
 

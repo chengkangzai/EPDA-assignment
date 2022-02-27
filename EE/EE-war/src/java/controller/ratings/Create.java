@@ -61,7 +61,7 @@ public class Create extends HttpServlet {
             }
 
             Product product = this.productFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
-            
+
             if (product == null) {
                 SHelper.redirectTo(request, response, "404.jsp");
                 return;

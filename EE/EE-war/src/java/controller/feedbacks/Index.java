@@ -30,7 +30,6 @@ public class Index extends HttpServlet {
     @EJB
     private FeedbackFacade feedbackFacade;
 
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.

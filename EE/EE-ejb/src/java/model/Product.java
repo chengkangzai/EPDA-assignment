@@ -82,7 +82,6 @@ public class Product extends Model implements Serializable {
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
     }
-    
 
     public Integer getId() {
         return id;
