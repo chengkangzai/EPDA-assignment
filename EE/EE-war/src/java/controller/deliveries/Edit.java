@@ -5,6 +5,7 @@
  */
 package controller.deliveries;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import java.sql.Date;
@@ -113,6 +114,12 @@ public class Edit extends HttpServlet {
 
             String id = SHelper.getParam(request, "id");
             Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+
+            if (Auth.user(request).is("Delivery Staff") && !delivery.getDeliverBy().equals(Auth.user(request))) {
+                SHelper.setSession(request, "error", "Gotcha! You should only update your task!");
+                SHelper.back(request, response);
+                return;
+            }
 
             delivery.setDeliverBy(deliveryBy);
             delivery.setOrder(order);
