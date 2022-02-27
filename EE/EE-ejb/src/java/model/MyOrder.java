@@ -6,7 +6,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
@@ -17,7 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
 
 /**
  *
@@ -31,26 +30,26 @@ public class MyOrder extends Model implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date createdAt;
-
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products;
 
     @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MyUser purchaseBy;
 
-    @OneToOne(mappedBy = "order",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "order", fetch = FetchType.EAGER)
     private Delivery delivery;
 
+    private Date createdAt;
+    private Date deletedAt;
+
     public MyOrder(List<Product> products, MyUser purchaseBy) {
-        this.createdAt = new Date();
+        this.createdAt = new Date(new java.util.Date().getTime());
         this.products = products;
         this.purchaseBy = purchaseBy;
     }
 
     public MyOrder() {
-        this.createdAt = new Date();
+        this.createdAt = new Date(new java.util.Date().getTime());
     }
 
     public MyUser getPurchaseBy() {
@@ -67,6 +66,14 @@ public class MyOrder extends Model implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public List<Product> getProducts() {

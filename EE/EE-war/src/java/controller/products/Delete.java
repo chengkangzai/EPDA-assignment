@@ -7,6 +7,7 @@ package controller.products;
 
 import Services.SHelper;
 import java.io.IOException;
+import java.sql.Date;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,12 +42,14 @@ public class Delete extends HttpServlet {
         Gate.authorise(request, response, "Delete Product");
 
         String id = SHelper.getParam(request, "id");
-        Product user = this.productFacade.findAll()
+        Product product = this.productFacade.findAll()
                 .stream()
                 .filter(x -> x.getId().equals(Integer.parseInt(id)))
                 .findFirst()
                 .get();
-        this.productFacade.remove(user);
+
+        product.setDeletedAt(new Date(new java.util.Date().getTime()));
+        this.productFacade.edit(product);
 
         SHelper.redirectTo(request, response, "/Products/Index");
     }

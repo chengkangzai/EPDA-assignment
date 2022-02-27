@@ -5,9 +5,12 @@
  */
 package model.EJB;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import model.Delivery;
 import model.MyOrder;
 
 /**
@@ -28,5 +31,13 @@ public class MyOrderFacade extends AbstractFacade<MyOrder> {
     public MyOrderFacade() {
         super(MyOrder.class);
     }
-    
+
+    @Override
+    public List<MyOrder> findAll() {
+        return super.findAll().stream().filter(x -> x.getDeletedAt() == null).collect(Collectors.toList());
+    }
+
+    public List<MyOrder> findAllWithTrashed() {
+        return super.findAll();
+    }
 }

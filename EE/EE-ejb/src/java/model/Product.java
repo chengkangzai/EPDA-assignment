@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,20 +30,25 @@ public class Product extends Model implements Serializable {
     @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
     private Rating rating;
 
+    private Date createdAt;
+    private Date deletedAt;
+
+    public Product(String name, Double price) {
+        this.createdAt = new Date(new java.util.Date().getTime());
+        this.name = name;
+        this.price = price;
+    }
+
+    public Product() {
+        this.createdAt = new Date(new java.util.Date().getTime());
+    }
+
     public Rating getRating() {
         return rating;
     }
 
     public void setRating(Rating rating) {
         this.rating = rating;
-    }
-
-    public Product(String name, Double price) {
-        this.name = name;
-        this.price = price;
-    }
-
-    public Product() {
     }
 
     public String getName() {
@@ -60,6 +66,23 @@ public class Product extends Model implements Serializable {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+    
 
     public Integer getId() {
         return id;

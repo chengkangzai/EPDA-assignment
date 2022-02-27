@@ -48,14 +48,19 @@ public class Delivery extends Model implements Serializable {
     @OneToOne(mappedBy = "delivery")
     private Feedback feedback;
 
+    private Date createdAt;
+    private Date deletedAt;
+
     public Delivery(Status status, MyOrder order, MyUser deliverTo, MyUser deliverBy) {
         this.status = status;
         this.order = order;
         this.deliverTo = deliverTo;
         this.deliverBy = deliverBy;
+        this.createdAt = new Date(new java.util.Date().getTime());
     }
 
     public Delivery() {
+        this.createdAt = new Date(new java.util.Date().getTime());
     }
 
     public MyOrder getOrder() {
@@ -96,6 +101,22 @@ public class Delivery extends Model implements Serializable {
 
     public void setRating(Rating rating) {
         this.rating = rating;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public Feedback getFeedback() {

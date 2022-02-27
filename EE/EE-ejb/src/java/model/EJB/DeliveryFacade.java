@@ -5,6 +5,8 @@
  */
 package model.EJB;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,13 @@ public class DeliveryFacade extends AbstractFacade<Delivery> {
     public DeliveryFacade() {
         super(Delivery.class);
     }
+
+    @Override
+    public List<Delivery> findAll() {
+        return super.findAll().stream().filter(x -> x.getDeletedAt() == null).collect(Collectors.toList());
+    }
     
+    public List<Delivery> findAllWithTrashed() {
+        return super.findAll();
+    }
 }
