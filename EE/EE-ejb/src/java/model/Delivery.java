@@ -221,7 +221,7 @@ public class Delivery extends Model implements Serializable {
         return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
                 + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
                 + "<tr class='border'><td>Status</td><td>" + this.getStatus() + " </td></tr>"
-                + "<tr class='border'><td>Customer</td><td>" + this.getDeliverTo() + " </td></tr>"
+                + "<tr class='border'><td>Address</td><td>" + this.getDeliverTo() + " </td></tr>"
                 + "<tr class='border'><td>Assigned to </td><td>" + this.getDeliverBy().getName() + " </td></tr>"
                 + "<tr class='border'><td>Order</td><td> Order ID : " + this.getOrder().getId() + " </td></tr>"
                 + (this.getDeliverAt() != null ? "<tr class='border'><td>Created At</td><td>" + this.getDeliverAt().toString() + " </td></tr>" : "")
