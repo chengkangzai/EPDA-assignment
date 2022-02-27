@@ -60,7 +60,6 @@ public class Create extends HttpServlet {
                     .map(x -> x.toSelection())
                     .collect(Collectors.joining());
 
-            //todo find order that have not delivered at
             String orders = this.myOrderFacade.findAll()
                     .stream()
                     .filter(x -> x.getDelivery() == null)

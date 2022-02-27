@@ -99,7 +99,12 @@ public class Edit extends HttpServlet {
                 SHelper.back(request, response);
                 return;
             }
-            //TODO if delivered, check deliveryat   
+
+            if (Delivery.findStatusByString(s) == Delivery.Status.DELIVERED && da.isEmpty()) {
+                SHelper.setSession(request, "validation_error", "");
+                SHelper.back(request, response);
+                return;
+            }
 
             List<MyUser> users = this.myUserFacade.findAll();
             MyUser deliveryBy = users.stream().filter(x -> x.getId().equals(Integer.parseInt(db))).findFirst().get();
@@ -120,7 +125,7 @@ public class Edit extends HttpServlet {
             this.deliveryFacade.edit(delivery);
             order.setDelivery(delivery);
             this.myOrderFacade.edit(order);
-            
+
             // if delivered, make sure it have delivered date
             SHelper.redirectTo(request, response, "/Deliveries/Index");
         }

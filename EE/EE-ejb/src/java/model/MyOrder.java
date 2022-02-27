@@ -125,7 +125,6 @@ public class MyOrder extends Model implements Serializable {
         return "MyOrder{" + "id=" + id + ", createdAt=" + createdAt + ", products=" + products + ", purchaseBy=" + purchaseBy + ", delivery=" + delivery + '}';
     }
 
-    //TODO proper to...
     @Override
     public String toTd(MyUser user) {
         return "<tr>"
