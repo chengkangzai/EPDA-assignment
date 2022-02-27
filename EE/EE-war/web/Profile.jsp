@@ -20,11 +20,20 @@
         <jsp:include page="include/alert.jsp" />
         <%
             MyUser user = Auth.user(request);
-            out.println(new HTML()
+            HTML html = new HTML()
                     .wrap()
                     .form("POST", "/EE-war/Profile?id=" + user.getId())
                     .input("email", "Email", user.getEmail())
                     .input("text", "Name", user.getName())
+                    .input("password", "Password", user.getPassword());
+
+            if (user.is("Customer")) {
+                html
+                        .input("text", "TPNumber", user.getTPNumber())
+                        .input("text", "Adddress", user.getAddress());
+            }
+
+            out.println(html
                     .submit()
                     .form()
                     .wrapped()

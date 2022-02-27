@@ -7,12 +7,8 @@ package controller;
 
 import Services.Auth;
 import Services.SHelper;
+import Services.Validator;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.Delivery;
 import model.EJB.MyUserFacade;
-import model.MyOrder;
 import model.MyUser;
 
 /**
@@ -58,9 +52,11 @@ public class Profile extends HttpServlet {
             String id = SHelper.getParam(request, "id");
             String name = SHelper.getParam(request, "name");
             String email = SHelper.getParam(request, "email");
+            String tp = SHelper.getParam(request, "TPNumber");
+            String address = SHelper.getParam(request, "address");
             String role = SHelper.getParam(request, "role");
 
-            if (role.isEmpty() || name.isEmpty() || email.isEmpty()) {
+            if (role.isEmpty() || name.isEmpty() || email.isEmpty() || tp.isEmpty() || address.isEmpty() || Validator.isValidEmail(email)) {
                 SHelper.setSession(request, "validation_error", name);
                 SHelper.back(request, response);
                 return;

@@ -3,7 +3,7 @@
 <%@page import="java.util.ArrayList"%>
 <div class="navbar bg-base-100 mb-4 shadow-xl rounded-box">
     <div class="navbar-start">
-        <a class="btn btn-ghost normal-case text-xl">APStock</a>       
+        <a class="btn btn-ghost normal-case text-xl" href='/EE-war/Login.jsp'>APStock</a>       
     </div>
     <div class="navbar-center">
         <!--Rating,Feedback-->

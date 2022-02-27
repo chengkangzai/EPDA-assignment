@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
  *
  * @author CCK
  */
-@Entity()
+@Entity
 public class MyUser extends Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,6 +27,9 @@ public class MyUser extends Model implements Serializable {
     private String email;
     private String password;
 
+    private String TPNumber;
+    private String address;
+
     @OneToOne()
     private MyRole role;
 
@@ -34,6 +37,14 @@ public class MyUser extends Model implements Serializable {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public MyUser(String name, String email, String password, String TPNumber, String address) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.TPNumber = TPNumber;
+        this.address = address;
     }
 
     public MyUser() {
@@ -61,6 +72,22 @@ public class MyUser extends Model implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTPNumber() {
+        return TPNumber == null ? "" : TPNumber;
+    }
+
+    public void setTPNumber(String TPNumber) {
+        this.TPNumber = TPNumber;
+    }
+
+    public String getAddress() {
+        return address == null ? "" : address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Integer getId() {
