@@ -58,9 +58,9 @@ public class Create extends HttpServlet {
                 return;
             }
 
-            String feedback = SHelper.getParam(request, "feedback");
+            String feedbackInput = SHelper.getParam(request, "feedback");
             String id = SHelper.getParam(request, "deliveryId");
-            if (feedback.isEmpty()) {
+            if (feedbackInput.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
                 return;
@@ -72,12 +72,13 @@ public class Create extends HttpServlet {
                 return;
             }
 
-            if (!delivery.getDeliverTo().equals(Auth.user(request))) {
+            if (!delivery.getOrder().getPurchaseBy().equals(Auth.user(request))) {
                 SHelper.redirectTo(request, response, "403.jsp");
                 return;
             }
-
-            this.feedbackFacade.create(new Feedback(feedback, delivery));
+            Feedback feedback = new Feedback(feedbackInput, delivery);
+            this.feedbackFacade.create(feedback);
+            delivery.setFeedback(feedback);
             SHelper.back(request, response);
         }
     }

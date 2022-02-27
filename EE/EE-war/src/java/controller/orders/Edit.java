@@ -71,6 +71,7 @@ public class Edit extends HttpServlet {
         }
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
+
             String p = SHelper.getParam(request, "products");
             if (p.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
@@ -105,6 +106,11 @@ public class Edit extends HttpServlet {
                     .findFirst()
                     .get();
 
+            if (order.getDelivery() != null) {
+                SHelper.setSession(request, "error", "The Order cannot be modify as it already been processed");
+                SHelper.back(request, response);
+                return;
+            }
             order.getProducts().addAll(products);
 
             this.myOrderFacade.edit(order);

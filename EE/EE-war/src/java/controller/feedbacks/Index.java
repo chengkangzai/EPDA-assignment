@@ -9,6 +9,7 @@ import Services.Auth;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,10 +49,19 @@ public class Index extends HttpServlet {
 
         List<Feedback> feedbacks = this.feedbackFacade.findAll();
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            feedbacks.forEach(x -> out.println(x.toTd(Auth.user(request))));
+        if (Auth.user(request).is("Customer")) {
+            feedbacks = feedbacks.stream()
+                    .filter(x -> {
+                        return x.getDelivery()
+                                .getOrder()
+                                .getPurchaseBy()
+                                .equals(Auth.user(request));
+                    })
+                    .collect(Collectors.toList());
+        }
 
+        try (PrintWriter out = response.getWriter()) {
+            feedbacks.forEach(x -> out.println(x.toTd(Auth.user(request))));
             out.println("</tbody></table>");
         }
     }

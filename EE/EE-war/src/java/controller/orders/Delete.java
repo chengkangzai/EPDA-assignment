@@ -49,6 +49,12 @@ public class Delete extends HttpServlet {
                 .findFirst()
                 .get();
 
+        if (order.getDelivery() != null) {
+            SHelper.setSession(request, "error", "The Order cannot be delete as it already been processed");
+            SHelper.back(request, response);
+            return;
+        }
+
         order.setDeletedAt(new Date(new java.util.Date().getTime()));
         this.myOrderFacade.edit(order);
         SHelper.redirectTo(request, response, "/Orders/Index");
