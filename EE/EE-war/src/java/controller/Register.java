@@ -15,7 +15,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import middleware.RedirectIfLoggedIn;
 import model.EJB.MyRoleFacade;
 import model.EJB.MyUserFacade;
 
@@ -52,9 +51,11 @@ public class Register extends HttpServlet {
 
         String email = SHelper.getParam(request, "email");
         String name = SHelper.getParam(request, "name");
-        String param = SHelper.getParam(request, "password");
+        String password = SHelper.getParam(request, "password");
+        String TPNumber = SHelper.getParam(request, "TPNumber");
+        String address = SHelper.getParam(request, "address");
 
-        if (email.isEmpty() || name.isEmpty() || param.isEmpty() || !Validator.isValidEmail(email)) {
+        if (email.isEmpty() || name.isEmpty() || password.isEmpty() || !Validator.isValidEmail(email)) {
             SHelper.setSession(request, "validation_error", "");
             System.out.println("Register Servelet: Validation Error");
             SHelper.incldue(request, response, "Register.jsp");
@@ -68,8 +69,7 @@ public class Register extends HttpServlet {
             System.out.println("Register Servelet: The Email is being used!");
             SHelper.incldue(request, response, "Register.jsp");
         } else {
-            SHelper.setSession(request, "user", a.register(email, param, name));
-
+            SHelper.setSession(request, "user", a.register(email, password, name, TPNumber, address));
             System.out.println("Register Servelet: User Registered");
             SHelper.redirectTo(request, response, "/Dashboard.jsp");
         }

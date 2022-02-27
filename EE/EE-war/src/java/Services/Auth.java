@@ -54,9 +54,9 @@ public class Auth {
                 .isPresent();
     }
 
-    public MyUser register(String email, String password, String name) {
+    public MyUser register(String email, String password, String name, String TPNumber, String address) {
         MyRole role = this.roleFacade.findAll().stream().filter(x -> x.getName().equals("Customer")).findFirst().get();
-        MyUser u = new MyUser(name, email, password);
+        MyUser u = new MyUser(name, email, password, TPNumber, address);
         u.setRole(role);
         this.userFacade.create(u);
         return this.user(email);

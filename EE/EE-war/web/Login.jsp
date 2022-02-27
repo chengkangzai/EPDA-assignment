@@ -5,7 +5,6 @@
 --%>
 <%@page import="middleware.RedirectIfLoggedIn"%>
 <%@page import="Services.SHelper"%>
-<%@ page session="true" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -27,12 +26,7 @@
                                 <div class="text-gray-500 text-center mb-3 mt-1 text-xl font-bold">
                                     <small>Sign in with Your credentials</small>
                                 </div>
-                                <% if (SHelper.getOnce(request, "validation_error") != null) {
-                                        out.println("<div class=\"alert shadow-lg alert-error my-2 \"><div><span>Error! Your form did not pass the validation.</span></div></div>");
-                                    } else if (SHelper.getOnce(request, "error") != null) {
-                                        out.println("<div class=\"alert shadow-lg alert-error my-2 \"><div><span>Error! Your Credential do not match our record.</span></div></div>");
-                                    }
-                                %>
+                                <jsp:include page="include/alert.jsp" />
 
                                 <form>
                                     <div class="relative w-full mb-3">

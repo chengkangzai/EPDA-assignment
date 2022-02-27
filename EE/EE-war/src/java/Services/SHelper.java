@@ -6,11 +6,6 @@
 package Services;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +48,10 @@ public class SHelper {
         Object temp = request.getSession().getAttribute(parameter);
         SHelper.setSession(request, parameter, null);
         return temp;
+    }
+
+    public static Object getSession(HttpServletRequest request, String parameter) {
+        return request.getSession().getAttribute(parameter);
     }
 
 }

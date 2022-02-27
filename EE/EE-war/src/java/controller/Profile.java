@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.users;
+package controller;
 
+import Services.Auth;
 import Services.SHelper;
+import Services.Validator;
 import java.io.IOException;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,20 +16,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.MyRoleFacade;
 import model.EJB.MyUserFacade;
-import model.MyRole;
 import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Users.Edit", urlPatterns = {"/Users/Edit"})
-public class Edit extends HttpServlet {
-
-    @EJB
-    private MyRoleFacade myRoleFacade;
+@WebServlet(name = "Profile", urlPatterns = {"/Profile"})
+public class Profile extends HttpServlet {
 
     @EJB
     private MyUserFacade userFacade;
@@ -45,40 +41,32 @@ public class Edit extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Update User");
-
-//Edit
+        Gate.authorise(request, response, "Update Profile");
+        //Create
         if (request.getMethod().toUpperCase().equals("GET")) {
-            String id = SHelper.getParam(request, "id");
-            MyUser user = this.userFacade.findAll()
-                    .stream()
-                    .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                    .findFirst()
-                    .get();
-            String roles = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining(""))
-                    .replaceAll("value='" + user.getRole().getId() + "'", "value='" + user.getRole().getId() + "' selected");
-            System.out.println(roles);
-            SHelper.setSession(request, "form:roles", roles);
-            SHelper.setSession(request, "form:user", user);
-            request.getRequestDispatcher("Edit.jsp").include(request, response);
+
+            request.getRequestDispatcher("Profile.jsp").include(request, response);
         }
-        //Update
+//Store
         if (request.getMethod().toUpperCase().equals("POST")) {
+            String id = SHelper.getParam(request, "id");
             String name = SHelper.getParam(request, "name");
             String email = SHelper.getParam(request, "email");
+            String tp = SHelper.getParam(request, "TPNumber");
+            String address = SHelper.getParam(request, "address");
             String role = SHelper.getParam(request, "role");
 
-            if (role.isEmpty() || name.isEmpty() || email.isEmpty()) {
+            if (role.isEmpty() || name.isEmpty() || email.isEmpty() || tp.isEmpty() || address.isEmpty() || Validator.isValidEmail(email)) {
                 SHelper.setSession(request, "validation_error", name);
                 SHelper.back(request, response);
                 return;
             }
 
-            String id = SHelper.getParam(request, "id");
+            if (!Auth.user(request).getId().equals(Integer.parseInt(id))) {
+                SHelper.redirectTo(request, response, Gate.FORBIIDEN);
+                return;
+            }
+
             MyUser user = this.userFacade.findAll()
                     .stream()
                     .filter(x -> x.getId().equals(Integer.parseInt(id)))
@@ -88,21 +76,8 @@ public class Edit extends HttpServlet {
             user.setEmail(email);
             user.setName(name);
 
-            MyRole assignedRole = this.myRoleFacade
-                    .findAll()
-                    .stream()
-                    .filter(x -> {
-                        return x.getId() == Integer.parseInt(role);
-                    })
-                    .findFirst()
-                    .orElse(user.getRole());
-
-            user.setRole(assignedRole);
-            this.userFacade.edit(user);
-
-            SHelper.redirectTo(request, response, "/Users/Index");
+            SHelper.redirectTo(request, response, "/Dashboard.jsp");
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
