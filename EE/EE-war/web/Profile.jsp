@@ -30,7 +30,7 @@
             if (user.is("Customer")) {
                 html
                         .input("text", "TPNumber", user.getTPNumber())
-                        .input("text", "Adddress", user.getAddress());
+                        .input("text", "Address", user.getAddress());
             }
 
             out.println(html
