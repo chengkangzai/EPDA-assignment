@@ -50,16 +50,24 @@ public class Profile extends HttpServlet {
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
             String id = SHelper.getParam(request, "id");
-            String name = SHelper.getParam(request, "name");
             String email = SHelper.getParam(request, "email");
-            String tp = SHelper.getParam(request, "TPNumber");
+            String name = SHelper.getParam(request, "name");
+            String password = SHelper.getParam(request, "password");
+            String tp = SHelper.getParam(request, "tpnumber");
             String address = SHelper.getParam(request, "address");
-            String role = SHelper.getParam(request, "role");
 
-            if (role.isEmpty() || name.isEmpty() || email.isEmpty() || tp.isEmpty() || address.isEmpty() || Validator.isValidEmail(email)) {
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 SHelper.setSession(request, "validation_error", name);
                 SHelper.back(request, response);
                 return;
+            }
+
+            if (Auth.user(request).is("Customer")) {
+                if (tp.isEmpty() || address.isEmpty()) {
+                    SHelper.setSession(request, "validation_error", name);
+                    SHelper.back(request, response);
+                    return;
+                }
             }
 
             if (!Auth.user(request).getId().equals(Integer.parseInt(id))) {
@@ -75,7 +83,7 @@ public class Profile extends HttpServlet {
 
             user.setEmail(email);
             user.setName(name);
-
+            SHelper.setSession(request, "user", user);
             SHelper.redirectTo(request, response, "/Dashboard.jsp");
         }
     }
