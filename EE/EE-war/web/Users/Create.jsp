@@ -15,7 +15,7 @@
 
     <div class="pt-10">
         <h2 class="text-3xl font-bold text-center">Create new Users</h2>
-       <jsp:include page="../include/alert.jsp" />
+        <jsp:include page="../include/alert.jsp" />
         <%
             String roles = SHelper.getOnce(request, "form:roles").toString();
             out.println(new HTML()

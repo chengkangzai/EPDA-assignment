@@ -25,8 +25,8 @@
             %>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="table w-2/3 mx-auto">
+        <div class="overflow-x-auto container mx-auto py-10">
+            <table class="table" id='datatable'>
                 <!-- head -->
                 <thead>
                     <tr>
@@ -39,5 +39,5 @@
                     </tr>
                 </thead>
                 <tbody>
-</body>
-</html>
+                    </body>
+                    </html>

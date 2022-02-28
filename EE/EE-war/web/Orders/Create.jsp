@@ -20,7 +20,7 @@
         <% Gate.authorise(request, response, "Create Order");%>
         <div class="pt-10">
             <h2 class="text-3xl font-bold text-center">Create new Order</h2>
-<jsp:include page="../include/alert.jsp" />
+            <jsp:include page="../include/alert.jsp" />
             <%
                 String products = SHelper.getOnce(request, "form:products").toString();
                 out.println(new HTML()

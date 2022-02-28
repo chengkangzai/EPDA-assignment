@@ -10,13 +10,13 @@
     </head>
     <jsp:include page="../include/nav.jsp" />
     <% Gate.authorise(request, response, "Read User");%>
-    
+
     <div class="flex flex-row-reverse w-4/5">
         <a class="btn btn-primary" href="/EE-war/Users/Create"> Create User </a>
-    </div>
-    
-    <div class="overflow-x-auto">
-        <table class="table w-2/3 mx-auto">
+    </div> 
+
+    <div class="overflow-x-auto container mx-auto py-10">
+        <table class="table" id='datatable'>
             <!-- head -->
             <thead>
                 <tr>
@@ -28,6 +28,6 @@
                 </tr>
             </thead>
             <tbody>
-        
-</body>
-</html>
+
+                </body>
+                </html>

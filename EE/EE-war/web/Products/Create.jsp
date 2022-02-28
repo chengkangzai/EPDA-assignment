@@ -17,22 +17,22 @@
     </head>
     <body>
         <jsp:include page="../include/nav.jsp" />
-            <% Gate.authorise(request, response, "Create Product");%>
-        
+        <% Gate.authorise(request, response, "Create Product");%>
+
         <div class="pt-10">
-        <h2 class="text-3xl font-bold text-center">Create new Product</h2>
-        <jsp:include page="../include/alert.jsp" />
-        <%
-            out.println(new HTML()
-                    .wrap()
-                    .form("POST", "/EE-war/Products/Create")
-                    .input("text", "Name")
-                    .input("number", "Price")
-                    .submit()
-                    .form()
-                    .wrapped()
-                    .getHtml()
-            );%>
-    </div>
+            <h2 class="text-3xl font-bold text-center">Create new Product</h2>
+            <jsp:include page="../include/alert.jsp" />
+            <%
+                out.println(new HTML()
+                        .wrap()
+                        .form("POST", "/EE-war/Products/Create")
+                        .input("text", "Name")
+                        .input("number", "Price")
+                        .submit()
+                        .form()
+                        .wrapped()
+                        .getHtml()
+                );%>
+        </div>
     </body>
 </html>

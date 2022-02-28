@@ -21,7 +21,7 @@
         <% Gate.authorise(request, response, "Update Product");%>
         <div class='pt-10'>
             <h2 class="text-3xl font-bold text-center">Edit Products</h2>
-          <jsp:include page="../include/alert.jsp" />
+            <jsp:include page="../include/alert.jsp" />
             <%
                 Product produt = (Product) request.getSession().getAttribute("form:product");
                 out.println(new HTML()

@@ -21,7 +21,7 @@
         <% Gate.authorise(request, response, "Update Order");%>
         <div class="pt-10">
             <h2 class="text-3xl font-bold text-center">Update Order</h2>
-          <jsp:include page="../include/alert.jsp" />
+            <jsp:include page="../include/alert.jsp" />
             <%
                 String products = SHelper.getOnce(request, "form:products").toString();
                 MyOrder order = (MyOrder) request.getSession().getAttribute("form:order");
@@ -35,6 +35,6 @@
                         .getHtml()
                 );%>
         </div>
-        
+
     </body>
 </html>
