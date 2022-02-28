@@ -26,20 +26,17 @@
             <%
                 String deliveryStaff = SHelper.getOnce(request, "form:deliveryStaff").toString();
                 String orders = SHelper.getOnce(request, "form:orders").toString();
-                String status = SHelper.getOnce(request, "form:status").toString();
                 Delivery delivery = (Delivery) request.getSession().getAttribute("form:delivery");
                 out.println(new HTML()
                         .wrap()
                         .form("POST", "/EE-war/Deliveries/Edit?id=" + delivery.getId())
                         .select("deliveryBy", "Assign to", deliveryStaff)
                         .select("orders", "Order", orders)
-                        .divide()
-                        .select("status", "Status", status)
-                        .datePicker("deliveryAt", "Deliver at")
                         .submit()
                         .form()
                         .wrapped()
                         .getHtml()
                 );%>
         </div>
+    </body>
 </html>

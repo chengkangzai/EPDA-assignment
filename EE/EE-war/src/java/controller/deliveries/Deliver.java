@@ -9,7 +9,6 @@ import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -20,23 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
 import model.Delivery;
 import model.EJB.DeliveryFacade;
-import model.EJB.MyOrderFacade;
-import model.EJB.MyUserFacade;
-import model.MyOrder;
 import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Deliveries.Edit", urlPatterns = {"/Deliveries/Edit"})
-public class Edit extends HttpServlet {
-
-    @EJB
-    private MyOrderFacade myOrderFacade;
-
-    @EJB
-    private MyUserFacade myUserFacade;
+@WebServlet(name = "Deliveries.Deliver", urlPatterns = {"/Deliveries/Deliver"})
+public class Deliver extends HttpServlet {
 
     @EJB
     private DeliveryFacade deliveryFacade;
@@ -50,74 +40,71 @@ public class Edit extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @SuppressWarnings("empty-statement")
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Update Delivery");
-        //Create
+        MyUser user = Auth.user(request);
+        if (!user.is("Delivery Staff")) {
+            SHelper.redirectTo(request, response, Gate.FORBIIDEN);
+            SHelper.setSession(request, "error", "Only Delivery User Can do this action");
+            return;
+        }
+
         if (request.getMethod().toUpperCase().equals("GET")) {
             String id = SHelper.getParam(request, "id");
-            Delivery delivery = this.deliveryFacade.findAll()
-                    .stream()
-                    .filter(x -> x.getId().equals(Integer.parseInt(id)))
-                    .findFirst()
-                    .get();
-
-            String deliveryStaff = this.myUserFacade.findAll()
-                    .stream()
-                    .filter(x -> x.getRole().getName().equals("Delivery Staff"))
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining())
-                    .replaceAll("value='" + delivery.getDeliverBy().getId() + "'", "value='" + delivery.getDeliverBy().getId() + "' selected");
-
-            String orders = this.myOrderFacade
-                    .findAll()
-                    .stream()
-                    .map(x -> x.toSelection())
-                    .collect(Collectors.joining())
-                    .replaceAll("value='" + delivery.getOrder().getId() + "'", "value='" + delivery.getOrder().getId() + "' selected");
-
-            SHelper.setSession(request, "form:deliveryStaff", deliveryStaff);
-            SHelper.setSession(request, "form:orders", orders);
-            SHelper.setSession(request, "form:delivery", delivery);
-
-            request.getRequestDispatcher("Edit.jsp").include(request, response);
-        }
-//Store
-        if (request.getMethod().toUpperCase().equals("POST")) {
-            String db = SHelper.getParam(request, "deliveryBy");
-            String o = SHelper.getParam(request, "orders");
-
-            if (db.isEmpty() || o.isEmpty()) {
-                SHelper.setSession(request, "validation_error", "");
+            Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            if (delivery == null) {
                 SHelper.back(request, response);
                 return;
             }
+            Double amount = delivery.getOrder().getProducts().stream().mapToDouble(x -> x.getPrice()).sum();
+            SHelper.setSession(request, "delivery", delivery);
+            SHelper.setSession(request, "amount", String.format("%.2f", amount));
 
-            List<MyUser> users = this.myUserFacade.findAll();
-            MyUser deliveryBy = users.stream().filter(x -> x.getId().equals(Integer.parseInt(db))).findFirst().get();
+            request.getRequestDispatcher("Deliver.jsp").include(request, response);
+            return;
+        }
 
-            MyOrder order = this.myOrderFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(o))).findFirst().get();
-
+        if (request.getMethod().toUpperCase().equals("POST")) {
             String id = SHelper.getParam(request, "id");
             Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
-
-            if (Auth.user(request).is("Delivery Staff") && !delivery.getDeliverBy().equals(Auth.user(request))) {
-                SHelper.setSession(request, "error", "Gotcha! You should only update your task!");
+            if (delivery == null) {
+                SHelper.back(request, response);
+                return;
+            }
+            String delivered = SHelper.getParam(request, "delivered");
+            String payment_collected = SHelper.getParam(request, "delivered");
+            if (!delivered.equals("on") || !payment_collected.equals("on")) {
+                SHelper.setSession(request, "error", "Hey you need to check both the checkbox");
                 SHelper.back(request, response);
                 return;
             }
 
-            delivery.setDeliverBy(deliveryBy);
-            delivery.setOrder(order);
-
+            delivery.setStatus(Delivery.Status.DELIVERED);
+            delivery.setDeliverAt(new Date(new java.util.Date().getTime()));
+            String productRow = delivery
+                    .getOrder()
+                    .getProducts()
+                    .stream()
+                    .map(x -> {
+                        return "<tr>"
+                                + "<td class='px-9 py-5 whitespace-nowrap space-x-1 flex items-center'>"
+                                + "<p class='font-bold'>" + x.getName() + "</p>"
+                                + "</td>"
+                                + "<td class='whitespace-nowrap text-gray-600 truncate'> RM " + x.getPriceInString()+ " </td>   "
+                                + "</tr>";
+                    })
+                    .collect(Collectors.joining());
             this.deliveryFacade.edit(delivery);
-            order.setDelivery(delivery);
-            this.myOrderFacade.edit(order);
 
-            // if delivered, make sure it have delivered date
-            SHelper.redirectTo(request, response, "/Deliveries/Index");
+            Double amount = delivery.getOrder().getProducts().stream().mapToDouble(x -> x.getPrice()).sum();
+            SHelper.setSession(request, "delivery", delivery);
+            SHelper.setSession(request, "amount", String.format("%.2f", amount));
+            SHelper.setSession(request, "productRow", productRow);
+            //redirect to Receipt page
+            request.getRequestDispatcher("Receipt.jsp").include(request, response);
+            return;
         }
     }
 

@@ -26,7 +26,7 @@ public class Delivery extends Model implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static enum Status {
-        PENDING, WAREHOUSE, IN_TRANSIT, DELIVERED
+        PENDING, IN_TRANSIT, DELIVERED
     }
 
     @Id
@@ -36,7 +36,7 @@ public class Delivery extends Model implements Serializable {
 
     @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MyOrder order;
-    
+
     private String deliverTo;
     @OneToOne
     private MyUser deliverBy;
@@ -155,7 +155,6 @@ public class Delivery extends Model implements Serializable {
         s.add(Status.DELIVERED);
         s.add(Status.IN_TRANSIT);
         s.add(Status.PENDING);
-        s.add(Status.WAREHOUSE);
         return s;
     }
 
@@ -167,8 +166,6 @@ public class Delivery extends Model implements Serializable {
                 return Status.IN_TRANSIT;
             case "PENDING":
                 return Status.PENDING;
-            case "WAREHOUSE":
-                return Status.WAREHOUSE;
             default:
                 return Status.PENDING;
         }
@@ -206,8 +203,10 @@ public class Delivery extends Model implements Serializable {
                 + "<td>" + this.getDeliverBy().getName() + "</td>"
                 + "<td class='flex gap-1'>"
                 + (user.can("Read Delivery") ? "<a class='btn btn-sm btn-success' href='/EE-war/Deliveries/Show?id=" + this.getId() + "'>Show</a>" : "")
-                + (user.can("Update Delivery") ? "<a class='btn btn-sm btn-accent' href='/EE-war/Deliveries/Edit?id=" + this.getId() + "'>Edit</a>" : "")
+                + (user.is("Managing Staff") && user.can("Update Delivery") ? "<a class='btn btn-sm btn-accent' href='/EE-war/Deliveries/Edit?id=" + this.getId() + "'>Edit</a>" : "")
                 + (user.can("Delete Delivery") ? "<a class='btn btn-sm btn-info' href='/EE-war/Deliveries/Delete?id=" + this.getId() + "'>Delete</a>" : "")
+                + (user.is("Delivery Staff") && this.getStatus() == Status.PENDING ? "<a class='btn btn-sm btn-ghost btn-outline' href='/EE-war/Deliveries/Transit?id=" + this.getId() + "'>Delivering</a>" : "")
+                + (user.is("Delivery Staff") && this.getStatus() == Status.IN_TRANSIT ? "<a class='btn btn-sm btn-accent btn-outline' href='/EE-war/Deliveries/Deliver?id=" + this.getId() + "'>Delivered</a>" : "")
                 + "</td></tr>";
     }
 
@@ -225,6 +224,7 @@ public class Delivery extends Model implements Serializable {
                 + "<tr class='border'><td>Assigned to </td><td>" + this.getDeliverBy().getName() + " </td></tr>"
                 + "<tr class='border'><td>Order</td><td> Order ID : " + this.getOrder().getId() + " </td></tr>"
                 + (this.getDeliverAt() != null ? "<tr class='border'><td>Created At</td><td>" + this.getDeliverAt().toString() + " </td></tr>" : "")
+                + (this.getStatus() == Status.DELIVERED ? "<tr class='border'><td>Receipt</td><td><a href='/EE-war/Deliveries/Receipt?id=" + this.getId() + "' class='btn btn-sm btn-outline btn-success'>View receipt</a></td></tr>" : "")
                 + "</table></div>";
     }
 }

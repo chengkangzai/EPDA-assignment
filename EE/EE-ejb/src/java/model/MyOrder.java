@@ -137,7 +137,7 @@ public class MyOrder extends Model implements Serializable {
                 + "<td>" + this.getCreatedAt().toLocaleString() + "</td>"
                 + "<td class='flex gap-1'>"
                 + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
-                + (this.getDelivery() == null || this.getDelivery().getStatus() == Delivery.Status.PENDING  ? "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>" : "")
+                + (this.getDelivery() == null || this.getDelivery().getStatus() == Delivery.Status.PENDING ? "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>" : "")
                 + (this.getDelivery() == null ? "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>" : "")
                 + "</td>"
                 + "</tr>";
