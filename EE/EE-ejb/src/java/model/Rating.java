@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
@@ -25,12 +26,16 @@ public class Rating implements Serializable {
     private Integer id;
     private Integer star;
 
-    @OneToOne
+    @ManyToOne
     private Product product;
 
-    public Rating(Integer star, Product product) {
+    @OneToOne
+    private MyUser rateBy;
+
+    public Rating(Integer star, Product product, MyUser rateBy) {
         this.star = star;
         this.product = product;
+        this.rateBy = rateBy;
     }
 
     public Rating() {
@@ -50,6 +55,14 @@ public class Rating implements Serializable {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public MyUser getRateBy() {
+        return rateBy;
+    }
+
+    public void setRateBy(MyUser rateBy) {
+        this.rateBy = rateBy;
     }
 
     public Integer getId() {

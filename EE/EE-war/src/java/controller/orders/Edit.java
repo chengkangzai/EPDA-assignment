@@ -5,7 +5,6 @@
  */
 package controller.orders;
 
-import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +19,6 @@ import middleware.Gate;
 import model.EJB.MyOrderFacade;
 import model.EJB.ProductFacade;
 import model.MyOrder;
-import model.MyUser;
 import model.Product;
 
 /**
@@ -112,7 +110,6 @@ public class Edit extends HttpServlet {
                 return;
             }
             order.getProducts().addAll(products);
-
             this.myOrderFacade.edit(order);
             SHelper.redirectTo(request, response, "/Orders/Index");
         }

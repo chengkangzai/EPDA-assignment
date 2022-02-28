@@ -5,6 +5,7 @@
  */
 package controller.ratings;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -66,8 +67,10 @@ public class Create extends HttpServlet {
                 SHelper.redirectTo(request, response, "404.jsp");
                 return;
             }
-
-            this.ratingFacade.create(new Rating(Integer.parseInt(star), product));
+            Rating rating = new Rating(Integer.parseInt(star), product, Auth.user(request));
+            this.ratingFacade.create(rating);
+            product.getRating().add(rating);
+            this.productFacade.edit(product);
             SHelper.back(request, response);
         }
     }

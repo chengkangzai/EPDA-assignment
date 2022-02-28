@@ -7,12 +7,13 @@ package model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -27,11 +28,15 @@ public class Product extends Model implements Serializable {
     private Integer id;
     private String name;
     private Double price;
-    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
-    private Rating rating;
+
+    @OneToMany(mappedBy = "product")
+    private ArrayList<Rating> rating;
 
     private Date createdAt;
     private Date deletedAt;
+
+    @ManyToMany(mappedBy = "products")
+    private ArrayList<MyOrder> myOrders;
 
     public Product(String name, Double price) {
         this.createdAt = new Date(new java.util.Date().getTime());
@@ -43,11 +48,11 @@ public class Product extends Model implements Serializable {
         this.createdAt = new Date(new java.util.Date().getTime());
     }
 
-    public Rating getRating() {
+    public ArrayList<Rating> getRating() {
         return rating;
     }
 
-    public void setRating(Rating rating) {
+    public void setRating(ArrayList<Rating> rating) {
         this.rating = rating;
     }
 
@@ -65,6 +70,14 @@ public class Product extends Model implements Serializable {
 
     public String getPriceInString() {
         return String.format("%.2f", price);
+    }
+
+    public ArrayList<MyOrder> getMyOrders() {
+        return myOrders;
+    }
+
+    public void setMyOrders(ArrayList<MyOrder> myOrders) {
+        this.myOrders = myOrders;
     }
 
     public void setPrice(Double price) {
@@ -123,7 +136,7 @@ public class Product extends Model implements Serializable {
     @Override
     public String toTd(MyUser user) {
         return "<tr><td>" + this.getId() + "</td><td>" + this.getName()
-                + "</td><td>" + this.getPriceInString()+ "</td><td class='flex gap-1'>"
+                + "</td><td>" + this.getPriceInString() + "</td><td class='flex gap-1'>"
                 + (user.can("Read Product") ? "<a class='btn btn-sm btn-success' href='/EE-war/Products/Show?id=" + this.getId() + "'>Show</a>" : "")
                 + (user.can("Update Product") ? "<a class='btn btn-sm btn-accent' href='/EE-war/Products/Edit?id=" + this.getId() + "'>Edit</a>" : "")
                 + (user.can("Delete Product") ? "<a class='btn btn-sm btn-info' href='/EE-war/Products/Delete?id=" + this.getId() + "'>Delete</a>" : "")
@@ -140,7 +153,7 @@ public class Product extends Model implements Serializable {
         return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
                 + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
                 + "<tr class='border'><td>Name</td><td>" + this.getName() + " </td></tr>"
-                + "<tr class='border'><td>Price</td><td>" + this.getPriceInString()+ " </td></tr>"
+                + "<tr class='border'><td>Price</td><td>" + this.getPriceInString() + " </td></tr>"
                 + "</table></div>";
     }
 

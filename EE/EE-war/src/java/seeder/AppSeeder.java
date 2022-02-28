@@ -62,8 +62,13 @@ public class AppSeeder {
     private AppSeeder seedRating() {
         ArrayList<Rating> s = new ArrayList();
         List<Product> p = this.productFacade.findAll();
+        List<MyUser> u = this.userFacade.findAll().stream().filter(x -> x.is("Customer")).collect(Collectors.toList());
         for (int i = 0; i < new Random().nextInt(15); i++) {
-            s.add(new Rating(new Random().nextInt(5), p.get(new Random().nextInt(p.size()))));
+            s.add(new Rating(
+                    new Random().nextInt(5),
+                    p.get(new Random().nextInt(p.size())),
+                    u.get(new Random().nextInt(u.size())))
+            );
         }
         s.forEach(this.ratingFacade::create);
         return this;

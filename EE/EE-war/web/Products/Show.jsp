@@ -4,6 +4,7 @@
     Author     : CCK
 --%>
 
+
 <%@page import="model.Product"%>
 <%@page import="Services.HTML"%>
 <%@page import="middleware.Gate"%>
@@ -25,9 +26,9 @@
         <div class="flex flex-row-reverse w-4/5">
             <%
                 Product product = (Product) request.getSession().getAttribute("product");
-                request.getSession().setAttribute("product", null);
-                
-                if (product.getRating() == null) {
+                Boolean shouldAskForRating = (Boolean) request.getSession().getAttribute("shouldAskForRating");
+
+                if (shouldAskForRating) {
                     out.println(new HTML().wrapModal(
                             "Rating this product",
                             "How many star you wanna give to this product?",
@@ -48,19 +49,19 @@
             %>
         </div>
         <%
-            if (product.getRating() != null) {
-                out.println("<table class='table w-2/3 mx-auto border mt-2'><tr><td>Rating</td><td>");
-                out.println("<div class='rating'>");
-                Integer star = product.getRating().getStar();
-                for (int i = 1; i <= 5; i++) {
-                    if (i <= star) {
-                        out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400' checked>");
-                    } else {
-                        out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400'>");
-                    }
+            Double star = (Double) request.getSession().getAttribute("star");
+
+            out.println("<table class='table w-2/3 mx-auto border mt-2'><tr><td>Rating</td><td>");
+            out.println("<div class='rating'>");
+            for (int i = 1; i <= 5; i++) {
+                if (i <= star) {
+                    out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400' checked>");
+                } else {
+                    out.println("<input type='radio' name='rating-2' class='mask mask-star-2 bg-orange-400'>");
                 }
-                out.println("</div></td></table>");
             }
+            out.println("</div></td></table>");
+
         %>
     </body>
 </html>

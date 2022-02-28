@@ -32,6 +32,8 @@ public class MyUser extends Model implements Serializable {
 
     @OneToOne()
     private MyRole role;
+    @OneToOne(mappedBy = "rateBy")
+    private Rating rating;
 
     public MyUser(String name, String email, String password) {
         this.name = name;
@@ -89,6 +91,15 @@ public class MyUser extends Model implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+    
 
     public Integer getId() {
         return id;

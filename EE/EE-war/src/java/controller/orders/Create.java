@@ -79,7 +79,7 @@ public class Create extends HttpServlet {
                         return found;
                     })
                     .collect(Collectors.toList());
-            System.out.println(products);
+
             if (products.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
                 SHelper.back(request, response);
@@ -87,6 +87,10 @@ public class Create extends HttpServlet {
             }
             MyOrder order = new MyOrder(products, Auth.user(request));
             this.myOrderFacade.create(order);
+            products.forEach(x -> {
+                x.getMyOrders().add(order);
+                this.productFacade.edit(x);
+            });
             SHelper.redirectTo(request, response, "/Orders/Index");
         }
     }
