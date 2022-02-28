@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +27,7 @@ import model.MyUser;
  */
 @WebServlet(name = "Orders.Index", urlPatterns = {"/Orders/Index"})
 public class Index extends HttpServlet {
-    
+
     @EJB
     private MyOrderFacade myOrderFacade;
 
@@ -45,7 +44,7 @@ public class Index extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Read Order");
-        
+
         request.getRequestDispatcher("Index.jsp").include(request, response);
         List<MyOrder> products;
         MyUser user = Auth.user(request);
@@ -57,7 +56,7 @@ public class Index extends HttpServlet {
         } else {
             products = this.myOrderFacade.findAll();
         }
-        
+
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             products.forEach(x -> out.println(x.toTd(Auth.user(request))));
