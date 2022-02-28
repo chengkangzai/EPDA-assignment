@@ -5,6 +5,7 @@
  */
 package controller.products;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
+import model.Delivery;
 import model.EJB.ProductFacade;
+import model.MyUser;
 import model.Product;
 
 /**
@@ -46,6 +49,17 @@ public class Show extends HttpServlet {
 
         Product product = this.productFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
         SHelper.setSession(request, "product", product);
+
+        MyUser user = Auth.user(request);
+        Boolean isBroughtedB4 = product.getMyOrders().stream().filter(x -> x.getPurchaseBy().equals(user)).count() >= 1;
+        Boolean isRateB4 = product.getRating().stream().filter(x -> x.getRateBy().equals(user)).count() >= 1;
+        Boolean shouldAskForRating = isBroughtedB4 && !isRateB4;
+
+        SHelper.setSession(request, "shouldAskForRating", shouldAskForRating);
+        Double star = product.getRating().stream().mapToDouble(x -> x.getStar()).average().orElse(0);
+
+        SHelper.setSession(request, "star", star);
+
         request.getRequestDispatcher("Show.jsp").include(request, response);
 
         try (PrintWriter out = response.getWriter()) {
