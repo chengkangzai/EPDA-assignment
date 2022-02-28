@@ -1,7 +1,7 @@
 <%@page import="Services.Auth"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.ArrayList"%>
-<div class="navbar bg-base-100 mb-4 shadow-xl rounded-box">
+<div class="navbar bg-base-100 mb-4 shadow-xl rounded-box print:hidden">
     <div class="navbar-start">
         <a class="btn btn-ghost normal-case text-xl" href='/EE-war/Login.jsp'>APStock</a>       
     </div>

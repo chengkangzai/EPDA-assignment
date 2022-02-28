@@ -111,8 +111,7 @@ public class MyUser extends Model implements Serializable {
     }
 
     public boolean is(String role) {
-        String roleName = this.getRole().getName();
-        return roleName.equals(role) || roleName.equals("Super Admin");
+        return this.getRole().getName().equals(role);
     }
 
     @Override

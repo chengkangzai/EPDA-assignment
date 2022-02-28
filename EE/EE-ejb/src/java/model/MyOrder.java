@@ -33,7 +33,7 @@ public class MyOrder extends Model implements Serializable {
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products;
 
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     private MyUser purchaseBy;
 
     @OneToOne(mappedBy = "order", fetch = FetchType.EAGER)
@@ -125,7 +125,6 @@ public class MyOrder extends Model implements Serializable {
         return "MyOrder{" + "id=" + id + ", createdAt=" + createdAt + ", products=" + products + ", purchaseBy=" + purchaseBy + ", delivery=" + delivery + '}';
     }
 
-    //TODO proper to...
     @Override
     public String toTd(MyUser user) {
         return "<tr>"
@@ -138,8 +137,8 @@ public class MyOrder extends Model implements Serializable {
                 + "<td>" + this.getCreatedAt().toLocaleString() + "</td>"
                 + "<td class='flex gap-1'>"
                 + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
-                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>"
-                + "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>"
+                + (this.getDelivery() == null || this.getDelivery().getStatus() == Delivery.Status.PENDING ? "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>" : "")
+                + (this.getDelivery() == null ? "<a class='btn btn-sm btn-info' href='/EE-war/Orders/Delete?id=" + this.getId() + "'>Delete</a>" : "")
                 + "</td>"
                 + "</tr>";
     }
@@ -151,6 +150,7 @@ public class MyOrder extends Model implements Serializable {
 
     @Override
     public String toShowTable() {
+
         return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
                 + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
                 + "<tr class='border'><td>Product</td>"
@@ -161,7 +161,7 @@ public class MyOrder extends Model implements Serializable {
                 + "<tr class='border'><td>Delivery</td><td>"
                 + (this.getDelivery() != null ? "<a class='btn btn-sm btn-ghost btn-outline' href='/EE-war/Deliveries/Show?id=" + this.getDelivery().getId() + "'>Show Delivery</a>" : "Pending") + "</td></tr>"
                 + "<tr class='border'> <td>Customer</td> <td>" + this.getPurchaseBy().getName() + "</td> </tr>"
-                + "<tr class='border'> <td>Created At</td> <td>" + this.getCreatedAt().toInstant().toString() + "</td> </tr>"
+                + "<tr class='border'> <td>Created At</td> <td>" + this.getCreatedAt().toString() + "</td> </tr>"
                 + "</table></div>";
     }
 

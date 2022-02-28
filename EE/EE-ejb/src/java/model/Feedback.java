@@ -82,7 +82,7 @@ public class Feedback extends Model implements Serializable {
 
     @Override
     public String toString() {
-        return "model.Feedback[ id=" + id + " ]";
+        return "Feedback{" + "id=" + id + ", feedback=" + feedback + ", delivery=" + delivery + '}';
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Feedback extends Model implements Serializable {
         return "<tr>"
                 + "<td>" + this.getId() + "</td>"
                 + "<td>" + this.getFeedback() + "</td>"
-                + "<td>" + this.getDelivery().getId() + "</td>"
+                + "<td> <a href='/EE-war/Deliveries/Show?id=" + this.getDelivery().getId() + "' class='btn btn-outline btn-sm btn-ghost'>" + this.getDelivery().getId() + "</a></td>"
                 //                + "<td class='flex gap-1'>"
                 //                + "<a class='btn btn-sm btn-success' href='/EE-war/Orders/Show?id=" + this.getId() + "'>Show</a>"
                 //                + "<a class='btn btn-sm btn-accent' href='/EE-war/Orders/Edit?id=" + this.getId() + "'>Add on</a>"

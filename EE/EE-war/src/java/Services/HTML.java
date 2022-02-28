@@ -235,6 +235,21 @@ public class HTML {
         return this;
     }
 
+    public HTML checkbox(String name, String placholder, boolean checked) {
+        this.html = this.html
+                + "<div class='form-control'>"
+                + "  <label class='cursor-pointer label'>"
+                + "    <span class='label-text'>" + placholder + "</span> "
+                + "    <input type='checkbox' " + (checked ? "checked='checked'" : "") + " class='checkbox' name='" + name + "'>"
+                + "  </label>"
+                + "</div>";
+        return this;
+    }
+
+    public HTML checkbox(String name, String placeholder) {
+        return this.checkbox(name, placeholder, false);
+    }
+
     public HTML input(String type, String name, String value) {
         return this.input(type, name, name, value);
     }

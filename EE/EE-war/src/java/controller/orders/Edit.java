@@ -5,6 +5,7 @@
  */
 package controller.orders;
 
+import Services.Auth;
 import Services.SHelper;
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +20,7 @@ import middleware.Gate;
 import model.EJB.MyOrderFacade;
 import model.EJB.ProductFacade;
 import model.MyOrder;
+import model.MyUser;
 import model.Product;
 
 /**
@@ -47,7 +49,12 @@ public class Edit extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Update Order");
-// TODO
+        MyUser user = Auth.user(request);
+        if (!user.is("Managing Staff")) {
+            SHelper.redirectTo(request, response, Gate.FORBIIDEN);
+            SHelper.setSession(request, "error", "Only Managing User Can do this action");
+            return;
+        }
         if (request.getMethod().toUpperCase().equals("GET")) {
             String id = SHelper.getParam(request, "id");
             MyOrder order = this.myOrderFacade
@@ -56,14 +63,13 @@ public class Edit extends HttpServlet {
                     .filter(x -> x.getId().equals(Integer.parseInt(id)))
                     .findFirst()
                     .get();
-//Convert update to add on 
+
             String products = this.productFacade
                     .findAll()
                     .stream()
                     .filter(x -> !order.getProducts().contains(x))
                     .map(x -> x.toSelection())
                     .collect(Collectors.joining(""));
-            System.out.println(products);
 
             SHelper.setSession(request, "form:products", products);
             SHelper.setSession(request, "form:order", order);
@@ -71,6 +77,7 @@ public class Edit extends HttpServlet {
         }
 //Store
         if (request.getMethod().toUpperCase().equals("POST")) {
+
             String p = SHelper.getParam(request, "products");
             if (p.isEmpty()) {
                 SHelper.setSession(request, "validation_error", "");
@@ -105,6 +112,11 @@ public class Edit extends HttpServlet {
                     .findFirst()
                     .get();
 
+            if (order.getDelivery() != null) {
+                SHelper.setSession(request, "error", "The Order cannot be modify as it already been processed");
+                SHelper.back(request, response);
+                return;
+            }
             order.getProducts().addAll(products);
 
             this.myOrderFacade.edit(order);

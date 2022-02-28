@@ -31,7 +31,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Status</th>
-                        <th>Customer</th>
+                        <th>Address</th>
                         <th>Assigned to </th>
                         <th>Action</th>
                     </tr>

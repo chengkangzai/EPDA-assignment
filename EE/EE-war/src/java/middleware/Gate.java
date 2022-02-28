@@ -28,7 +28,7 @@ public class Gate {
         }
 
         if (!Auth.can(req, name)) {
-            SHelper.redirectTo(req, res, Gate.FORBIIDEN);
+            SHelper.incldue(req, res, Gate.FORBIIDEN);
             return;
         }
     }

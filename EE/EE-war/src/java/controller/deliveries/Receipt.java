@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.feedbacks;
+package controller.deliveries;
 
-import Services.Auth;
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.sql.Date;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -17,19 +17,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.FeedbackFacade;
-
-import model.Feedback;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Feedbacks.Index", urlPatterns = {"/Feedbacks/Index"})
-public class Index extends HttpServlet {
+@WebServlet(name = "Deliveries.Receipt", urlPatterns = {"/Deliveries/Receipt"})
+public class Receipt extends HttpServlet {
 
     @EJB
-    private FeedbackFacade feedbackFacade;
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,26 +42,36 @@ public class Index extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Read Feedback");
-
-        request.getRequestDispatcher("Index.jsp").include(request, response);
-
-        List<Feedback> feedbacks = this.feedbackFacade.findAll();
-
-        if (Auth.user(request).is("Customer")) {
-            feedbacks = feedbacks.stream()
-                    .filter(x -> {
-                        return x.getDelivery()
-                                .getOrder()
-                                .getPurchaseBy()
-                                .equals(Auth.user(request));
+        Gate.authorise(request, response, "Read Delivery");
+        if (request.getMethod().toUpperCase().equals("GET")) {
+            String id = SHelper.getParam(request, "id");
+            Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            if (delivery == null || delivery.getStatus() != Delivery.Status.DELIVERED) {
+                SHelper.back(request, response);
+                return;
+            }
+            String productRow = delivery
+                    .getOrder()
+                    .getProducts()
+                    .stream()
+                    .map(x -> {
+                        return "<tr>"
+                                + "<td class='px-9 py-5 whitespace-nowrap space-x-1 flex items-center'>"
+                                + "<p class='font-bold'>" + x.getName() + "</p>"
+                                + "</td>"
+                                + "<td class='whitespace-nowrap text-gray-600 truncate'> RM " + x.getPriceInString() + " </td>   "
+                                + "</tr>";
                     })
-                    .collect(Collectors.toList());
-        }
+                    .collect(Collectors.joining());
+            this.deliveryFacade.edit(delivery);
 
-        try (PrintWriter out = response.getWriter()) {
-            feedbacks.forEach(x -> out.println(x.toTd(Auth.user(request))));
-            out.println("</tbody></table>");
+            Double amount = delivery.getOrder().getProducts().stream().mapToDouble(x -> x.getPrice()).sum();
+            SHelper.setSession(request, "delivery", delivery);
+            SHelper.setSession(request, "amount", String.format("%.2f", amount));
+            SHelper.setSession(request, "productRow", productRow);
+            //redirect to Receipt page
+            request.getRequestDispatcher("Receipt.jsp").include(request, response);
+            return;
         }
     }
 

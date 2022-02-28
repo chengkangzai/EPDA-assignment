@@ -63,6 +63,10 @@ public class Product extends Model implements Serializable {
         return price;
     }
 
+    public String getPriceInString() {
+        return String.format("%.2f", price);
+    }
+
     public void setPrice(Double price) {
         this.price = price;
     }
@@ -119,7 +123,7 @@ public class Product extends Model implements Serializable {
     @Override
     public String toTd(MyUser user) {
         return "<tr><td>" + this.getId() + "</td><td>" + this.getName()
-                + "</td><td>" + this.getPrice() + "</td><td class='flex gap-1'>"
+                + "</td><td>" + this.getPriceInString()+ "</td><td class='flex gap-1'>"
                 + (user.can("Read Product") ? "<a class='btn btn-sm btn-success' href='/EE-war/Products/Show?id=" + this.getId() + "'>Show</a>" : "")
                 + (user.can("Update Product") ? "<a class='btn btn-sm btn-accent' href='/EE-war/Products/Edit?id=" + this.getId() + "'>Edit</a>" : "")
                 + (user.can("Delete Product") ? "<a class='btn btn-sm btn-info' href='/EE-war/Products/Delete?id=" + this.getId() + "'>Delete</a>" : "")
@@ -136,7 +140,7 @@ public class Product extends Model implements Serializable {
         return "<div class='overflow-x-auto mt-10'><table class='table w-2/3 mx-auto border'>"
                 + "<tr class='border'><td>ID</td><td>" + this.getId() + " </td></tr>"
                 + "<tr class='border'><td>Name</td><td>" + this.getName() + " </td></tr>"
-                + "<tr class='border'><td>Price</td><td>" + this.getPrice() + " </td></tr>"
+                + "<tr class='border'><td>Price</td><td>" + this.getPriceInString()+ " </td></tr>"
                 + "</table></div>";
     }
 

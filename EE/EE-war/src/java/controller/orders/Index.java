@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
 import model.EJB.MyOrderFacade;
 import model.MyOrder;
+import model.MyUser;
 
 /**
  *
@@ -46,8 +47,12 @@ public class Index extends HttpServlet {
 
         request.getRequestDispatcher("Index.jsp").include(request, response);
         List<MyOrder> products;
-        if (Auth.user(request).is("Customer")) {
-            products = this.myOrderFacade.findAll().stream().filter(x -> x.getPurchaseBy().equals(Auth.user(request))).collect(Collectors.toList());
+        MyUser user = Auth.user(request);
+        if (user.is("Customer")) {
+            products = this.myOrderFacade.findAll()
+                    .stream()
+                    .filter(x -> x.getPurchaseBy() != null && x.getPurchaseBy().equals(user))
+                    .collect(Collectors.toList());
         } else {
             products = this.myOrderFacade.findAll();
         }

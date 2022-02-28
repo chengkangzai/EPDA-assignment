@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller.feedbacks;
+package controller.deliveries;
 
 import Services.Auth;
+import Services.SHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.sql.Date;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,19 +17,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
-import model.EJB.FeedbackFacade;
-
-import model.Feedback;
+import model.Delivery;
+import model.EJB.DeliveryFacade;
+import model.MyUser;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "Feedbacks.Index", urlPatterns = {"/Feedbacks/Index"})
-public class Index extends HttpServlet {
+@WebServlet(name = "Deliveries.Transit", urlPatterns = {"/Deliveries/Transit"})
+public class Transit extends HttpServlet {
 
     @EJB
-    private FeedbackFacade feedbackFacade;
+    private DeliveryFacade deliveryFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,26 +43,31 @@ public class Index extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Gate.authorise(request, response, "Read Feedback");
+        Gate.authorise(request, response, "Update Delivery");
+        if (request.getMethod().toUpperCase().equals("GET")) {
+            MyUser user = Auth.user(request);
+            if (!user.is("Delivery Staff")) {
+                SHelper.redirectTo(request, response, Gate.FORBIIDEN);
+                SHelper.setSession(request, "error", "Only Delivery User Can do this action");
+                return;
+            }
 
-        request.getRequestDispatcher("Index.jsp").include(request, response);
+            String id = SHelper.getParam(request, "id");
+            Delivery delivery = this.deliveryFacade.findAll().stream().filter(x -> x.getId().equals(Integer.parseInt(id))).findFirst().get();
+            if (delivery == null) {
+                SHelper.back(request, response);
+                return;
+            }
 
-        List<Feedback> feedbacks = this.feedbackFacade.findAll();
-
-        if (Auth.user(request).is("Customer")) {
-            feedbacks = feedbacks.stream()
-                    .filter(x -> {
-                        return x.getDelivery()
-                                .getOrder()
-                                .getPurchaseBy()
-                                .equals(Auth.user(request));
-                    })
-                    .collect(Collectors.toList());
+            delivery.setStatus(Delivery.Status.IN_TRANSIT);
+            this.deliveryFacade.edit(delivery);
+            SHelper.back(request, response);
+            return;
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            feedbacks.forEach(x -> out.println(x.toTd(Auth.user(request))));
-            out.println("</tbody></table>");
+        if (request.getMethod().toUpperCase().equals("POST")) {
+            SHelper.redirectTo(request, response, "/403.jsp");
+            return;
         }
     }
 
