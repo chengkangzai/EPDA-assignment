@@ -49,12 +49,6 @@ public class Edit extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Gate.authorise(request, response, "Update Order");
-        MyUser user = Auth.user(request);
-        if (!user.is("Managing Staff")) {
-            SHelper.redirectTo(request, response, Gate.FORBIIDEN);
-            SHelper.setSession(request, "error", "Only Managing User Can do this action");
-            return;
-        }
         if (request.getMethod().toUpperCase().equals("GET")) {
             String id = SHelper.getParam(request, "id");
             MyOrder order = this.myOrderFacade
