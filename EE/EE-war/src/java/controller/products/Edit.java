@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import middleware.Gate;
 import model.EJB.ProductFacade;
-import model.MyRole;
-import model.MyUser;
 import model.Product;
 
 /**
