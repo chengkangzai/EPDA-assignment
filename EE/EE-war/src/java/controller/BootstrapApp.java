@@ -7,7 +7,6 @@ package controller;
 
 import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -81,6 +80,64 @@ public class BootstrapApp extends HttpServlet {
 
         if (request.getMethod().equals("GET")) {
             SHelper.redirectTo(request, response, "/BootstrapApp.jsp");
+            return;
+        }
+
+        if (request.getMethod().equals("POST")) {
+            String value = SHelper.getParam(request, "submit");
+            if (value.isEmpty()) {
+                SHelper.setSession(request, "error", "Hoi How you get here");
+                SHelper.back(request, response);
+                return;
+            }
+            BootstrapSeeder bootstrapSeeder = new BootstrapSeeder(permissionFacade, userFacade, roleFacade);
+            AppSeeder appSeeder = new AppSeeder(deliveryFacade, feedbackFacade, productFacade, ratingFacade, userFacade, myOrderFacade);
+            String[] mode = value.split(" ");
+            if ("Seed".equals(mode[0])) {
+                switch (mode[1]) {
+                    case "Order":
+                        appSeeder.seedOrder();
+                        break;
+                    case "Product":
+                        appSeeder.seedProduct();
+                        break;
+                    case "User":
+                        bootstrapSeeder.seedUser().assignRole();
+                        break;
+                    case "Delivery":
+                        appSeeder.seedDelivery();
+                        break;
+                    case "Rating":
+                        appSeeder.seedRating();
+                        break;
+                    case "Feedback":
+                        appSeeder.seedFeedback();
+                        break;
+                }
+                SHelper.setSession(request, "success", "Data has been seeded");
+            }
+            if ("Truncate".equals(mode[0])) {
+                switch (mode[1]) {
+                    case "Order":
+                        this.myOrderFacade.truncate();
+                        break;
+                    case "Product":
+                        productFacade.truncate();
+                        break;
+                    case "Delivery":
+                        deliveryFacade.truncate();
+                        break;
+                    case "Rating":
+                        ratingFacade.truncate();
+                        break;
+                    case "Feedback":
+                        feedbackFacade.truncate();
+                        break;
+                }
+                SHelper.setSession(request, "success", "Data has been truncate");
+            }
+
+            SHelper.back(request, response);
             return;
         }
     }

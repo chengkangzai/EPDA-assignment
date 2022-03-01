@@ -51,7 +51,7 @@ public class AppSeeder {
         this.truncate().seedProduct().seedOrder().seedDelivery().seedRating().seedFeedback();
     }
 
-    private AppSeeder truncate() {
+    public AppSeeder truncate() {
         this.ratingFacade.truncate();
         this.feedbackfacade.truncate();
         this.deliveryfacade.truncate();
@@ -60,7 +60,7 @@ public class AppSeeder {
         return this;
     }
 
-    private AppSeeder seedRating() {
+    public AppSeeder seedRating() {
         List<Product> p = this.productFacade.findAll();
         List<MyUser> u = this.userFacade.findAll().stream().filter(x -> x.is("Customer")).collect(Collectors.toList());
         for (int i = 0; i < new Random().nextInt(15); i++) {
@@ -76,7 +76,7 @@ public class AppSeeder {
         return this;
     }
 
-    private AppSeeder seedFeedback() {
+    public AppSeeder seedFeedback() {
         List<Delivery> d = this.deliveryfacade.findAll().stream().filter(x -> x.getStatus() == Status.DELIVERED).collect(Collectors.toList());
         for (int i = 0; i < d.size(); i++) {
             Delivery delivery = d.get(i);
@@ -88,7 +88,7 @@ public class AppSeeder {
         return this;
     }
 
-    private AppSeeder seedProduct() {
+    public AppSeeder seedProduct() {
         ArrayList<Product> s = new ArrayList();
         s.add(new Product("MINERAL WATER 600ml", 1.8));
         s.add(new Product("BUN", 2.9));
@@ -108,7 +108,7 @@ public class AppSeeder {
         return this;
     }
 
-    private AppSeeder seedOrder() {
+    public AppSeeder seedOrder() {
         List<Product> products = this.productFacade.findAll();
         List<MyUser> users = this.userFacade.findAll().stream().filter(x -> x.getRole().getName().equals("Customer")).collect(Collectors.toList());
 
@@ -134,7 +134,7 @@ public class AppSeeder {
         return this;
     }
 
-    private AppSeeder seedDelivery() {
+    public AppSeeder seedDelivery() {
         List<MyOrder> orders = this.orderFacade.findAll();
         List<MyUser> users = this.userFacade.findAll();
         List<MyUser> deliveryStaff = users.stream().filter(x -> x.getRole().getName().equals("Delivery Staff")).collect(Collectors.toList());

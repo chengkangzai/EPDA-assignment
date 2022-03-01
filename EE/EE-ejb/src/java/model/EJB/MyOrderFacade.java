@@ -5,6 +5,7 @@
  */
 package model.EJB;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
@@ -38,5 +39,10 @@ public class MyOrderFacade extends AbstractFacade<MyOrder> {
 
     public List<MyOrder> findAllWithTrashed() {
         return super.findAll();
+    }
+    
+     @Override
+    public void truncate() {
+        this.findAll().forEach(x -> x.setDeletedAt(new Date(new java.util.Date().getTime())));
     }
 }

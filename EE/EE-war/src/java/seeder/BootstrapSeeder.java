@@ -36,14 +36,14 @@ public class BootstrapSeeder {
         this.truncate().seedRoles().seedPermissions().seedUser().assignPermissions().assignRole();
     }
 
-    private BootstrapSeeder truncate() {
+    public BootstrapSeeder truncate() {
         this.userFacade.truncate();
         this.permissionfacade.truncate();
         this.roleFacade.truncate();
         return this;
     }
 
-    private BootstrapSeeder seedUser() {
+    public BootstrapSeeder seedUser() {
         ArrayList<MyUser> s = new ArrayList();
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
@@ -59,7 +59,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private BootstrapSeeder seedRoles() {
+    public BootstrapSeeder seedRoles() {
         ArrayList<MyRole> s = new ArrayList();
         s.add(new MyRole("Super Admin"));
         s.add(new MyRole("Delivery Staff"));
@@ -69,7 +69,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private BootstrapSeeder seedPermissions() {
+    public BootstrapSeeder seedPermissions() {
         this.permissionfacade.truncate();
 
         ArrayList<Permission> p = new ArrayList();
@@ -97,7 +97,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private BootstrapSeeder assignPermissions() {
+    public BootstrapSeeder assignPermissions() {
         this.roleFacade.findAll().forEach((MyRole role) -> {
             List<Permission> can = getPermissionWithRole(role);
             role.setPermissions(can);
@@ -107,7 +107,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private List<Permission> getPermissionWithRole(MyRole role) {
+    public List<Permission> getPermissionWithRole(MyRole role) {
         List<Permission> p = this.permissionfacade.findAll();
         switch (role.getName()) {
             case "Managing Staff":
@@ -152,7 +152,7 @@ public class BootstrapSeeder {
 
     }
 
-    private BootstrapSeeder assignRole() {
+    public BootstrapSeeder assignRole() {
         List<MyRole> roles = this.roleFacade.findAll();
         this.userFacade.findAll().forEach((MyUser x) -> {
             String name = x.getName();

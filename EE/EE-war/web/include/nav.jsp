@@ -42,11 +42,15 @@
                 </div>
             </label>
             <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-
                 <li class='cursor-default no-animation'>
                     <a href='/EE-war/Profile.jsp'> <% out.println(Auth.user(request).getName()); %></a>
                 </li>
                 <div class='divider h-1 my-2'></div>
+                <%
+                    if (Auth.user(request).is("Super Admin")) {
+                        out.println("<li><a href='/EE-war/BootstrapApp.jsp'>Bootstrap App</a></li>");
+                    }
+                %>
                 <li><a  href='/EE-war/Profile.jsp'>Profile</a></li>
                 <li><a href="/EE-war/Logout">Logout</a></li>
             </ul>
