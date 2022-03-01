@@ -14,8 +14,11 @@
     </head>
     <jsp:include page="../include/nav.jsp" />
     <body>
-        <div class='mx-auto container'>
-            <canvas id="myChart"></canvas>
+        <div class='grid px-20 grid-cols-2'>
+            <div class='w-full'>
+                <p>Sales Report</p>
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
         <script>
             const labels = <% out.println(dates); %>;
@@ -23,7 +26,7 @@
                 labels: labels,
                 datasets: [{
                         label: 'Sales report',
-                        data: <% out.println(sales); %>,
+                        data: <% out.println(sales);%>,
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)',
                         tension: 0.1
@@ -36,7 +39,7 @@
                 options: {}
             };
 
-            const myChart = new Chart(document.getElementById('myChart'),config);
+            const myChart = new Chart(document.getElementById('myChart'), config);
         </script>
     </body>
 </html>
