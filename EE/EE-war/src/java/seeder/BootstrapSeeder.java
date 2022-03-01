@@ -36,30 +36,30 @@ public class BootstrapSeeder {
         this.truncate().seedRoles().seedPermissions().seedUser().assignPermissions().assignRole();
     }
 
-    private BootstrapSeeder truncate() {
+    public BootstrapSeeder truncate() {
         this.userFacade.truncate();
         this.permissionfacade.truncate();
         this.roleFacade.truncate();
         return this;
     }
 
-    private BootstrapSeeder seedUser() {
+    public BootstrapSeeder seedUser() {
         ArrayList<MyUser> s = new ArrayList();
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
-        s.add(new MyUser("Managing Staff 1", "managing1@EE.com", "password"));
-        s.add(new MyUser("Managing Staff 2", "managing2@EE.com", "password"));
         s.add(new MyUser("Delivery Staff", "delivery@EE.com", "password"));
-        s.add(new MyUser("Delivery Staff 1", "delivery1@EE.com", "password"));
-        s.add(new MyUser("Delivery Staff 2", "delivery2@EE.com", "password"));
+        for (int i = 1; i <= 4; i++) {
+            s.add(new MyUser("Delivery Staff " + i, "delivery" + i + "@EE.com", "password"));
+        }
         s.add(new MyUser("Customer", "customer@EE.com", "password", "TP050000", "Customer Address"));
-        s.add(new MyUser("Customer 1", "customer1@EE.com", "password", "TP050000", "Customer 1 Address"));
-        s.add(new MyUser("Customer 2", "customer2@EE.com", "password", "TP050000", "Customer 2 Address"));
+        for (int i = 1; i <= 20; i++) {
+            s.add(new MyUser("Customer" + i, "customer" + i + "@EE.com", "password", "TP05000" + i, "Customer Address" + i));
+        }
         s.forEach(this.userFacade::create);
         return this;
     }
 
-    private BootstrapSeeder seedRoles() {
+    public BootstrapSeeder seedRoles() {
         ArrayList<MyRole> s = new ArrayList();
         s.add(new MyRole("Super Admin"));
         s.add(new MyRole("Delivery Staff"));
@@ -69,7 +69,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private BootstrapSeeder seedPermissions() {
+    public BootstrapSeeder seedPermissions() {
         this.permissionfacade.truncate();
 
         ArrayList<Permission> p = new ArrayList();
@@ -86,6 +86,7 @@ public class BootstrapSeeder {
         });
 
         p.add(new Permission("Update Profile"));
+        p.add(new Permission("Bootstrap App"));
 
         //sort the p array list 
         p.sort((Permission p1, Permission p2) -> {
@@ -96,7 +97,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private BootstrapSeeder assignPermissions() {
+    public BootstrapSeeder assignPermissions() {
         this.roleFacade.findAll().forEach((MyRole role) -> {
             List<Permission> can = getPermissionWithRole(role);
             role.setPermissions(can);
@@ -106,7 +107,7 @@ public class BootstrapSeeder {
         return this;
     }
 
-    private List<Permission> getPermissionWithRole(MyRole role) {
+    public List<Permission> getPermissionWithRole(MyRole role) {
         List<Permission> p = this.permissionfacade.findAll();
         switch (role.getName()) {
             case "Managing Staff":
@@ -151,28 +152,18 @@ public class BootstrapSeeder {
 
     }
 
-    private BootstrapSeeder assignRole() {
+    public BootstrapSeeder assignRole() {
         List<MyRole> roles = this.roleFacade.findAll();
         this.userFacade.findAll().forEach((MyUser x) -> {
-            switch (x.getName()) {
-                case "Super Admin":
-                    x.setRole(roles.stream().filter(y -> y.getName().equals("Super Admin")).findFirst().get());
-                    break;
-                case "Customer":
-                case "Customer 1":
-                case "Customer 2":
-                    x.setRole(roles.stream().filter(y -> y.getName().equals("Customer")).findFirst().get());
-                    break;
-                case "Managing Staff":
-                case "Managing Staff 1":
-                case "Managing Staff 2":
-                    x.setRole(roles.stream().filter(y -> y.getName().equals("Managing Staff")).findFirst().get());
-                    break;
-                case "Delivery Staff":
-                case "Delivery Staff 1":
-                case "Delivery Staff 2":
-                    x.setRole(roles.stream().filter(y -> y.getName().equals("Delivery Staff")).findFirst().get());
-                    break;
+            String name = x.getName();
+            if (name.equals("Super Admin")) {
+                x.setRole(roles.stream().filter(y -> y.getName().equals("Super Admin")).findFirst().get());
+            } else if (name.startsWith("Customer")) {
+                x.setRole(roles.stream().filter(y -> y.getName().equals("Customer")).findFirst().get());
+            } else if (name.startsWith("Managing")) {
+                x.setRole(roles.stream().filter(y -> y.getName().equals("Managing Staff")).findFirst().get());
+            } else if (name.startsWith("Delivery")) {
+                x.setRole(roles.stream().filter(y -> y.getName().equals("Delivery Staff")).findFirst().get());
             }
             this.userFacade.edit(x);
         });

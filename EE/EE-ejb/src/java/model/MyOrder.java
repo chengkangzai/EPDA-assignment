@@ -92,6 +92,12 @@ public class MyOrder extends Model implements Serializable {
         this.delivery = delivery;
     }
 
+    public Double getTotalPrice() {
+        return this.products.stream()
+                .mapToDouble(x -> x.getPrice())
+                .sum();
+    }
+
     public Integer getId() {
         return id;
     }
@@ -118,6 +124,10 @@ public class MyOrder extends Model implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public String toJSON() {
+        return "{'date':" + this.createdAt.toString() + ", 'price': " + this.getTotalPrice() + "}";
     }
 
     @Override

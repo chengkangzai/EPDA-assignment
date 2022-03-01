@@ -75,7 +75,7 @@
                             <p class="font-medium text-sm text-gray-400"> Note </p>
                             <p class="text-sm"> Thank you for your order. </p>
                         </div>
-                        <table class="w-full divide-y divide-gray-200 text-sm">
+                        <table class="w-full divide-y divide-gray-200 text-sm border-b border-gray-200">
                             <thead>
                                 <tr>
                                     <th scope="col" class="px-9 py-4 text-left font-semibold text-gray-400"> Item </th>

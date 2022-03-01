@@ -61,7 +61,6 @@ public class Receipt extends HttpServlet {
                                 + "</tr>";
                     })
                     .collect(Collectors.joining());
-            this.deliveryFacade.edit(delivery);
 
             Double amount = delivery.getOrder().getProducts().stream().mapToDouble(x -> x.getPrice()).sum();
             SHelper.setSession(request, "delivery", delivery);

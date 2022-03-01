@@ -5,6 +5,7 @@
  */
 package model.EJB;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
@@ -18,19 +19,19 @@ import model.Delivery;
  */
 @Stateless
 public class DeliveryFacade extends AbstractFacade<Delivery> {
-
+    
     @PersistenceContext(unitName = "EE-ejbPU")
     private EntityManager em;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-
+    
     public DeliveryFacade() {
         super(Delivery.class);
     }
-
+    
     @Override
     public List<Delivery> findAll() {
         return super.findAll().stream().filter(x -> x.getDeletedAt() == null).collect(Collectors.toList());
@@ -38,5 +39,10 @@ public class DeliveryFacade extends AbstractFacade<Delivery> {
     
     public List<Delivery> findAllWithTrashed() {
         return super.findAll();
+    }
+    
+    @Override
+    public void truncate() {
+        this.findAll().forEach(x -> x.setDeletedAt(new Date(new java.util.Date().getTime())));
     }
 }

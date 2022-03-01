@@ -168,6 +168,8 @@ public class MyUser extends Model implements Serializable {
                 + "<tr class='border'><td>Name</td><td>" + this.getName() + " </td></tr>"
                 + "<tr class='border'><td>Email</td><td>" + this.getEmail() + " </td></tr>"
                 + "<tr class='border'><td>Role</td><td>" + this.getRole().getName() + " </td></tr>"
+                + (this.is("Customer") ? "<tr class='border'><td>TP Number</td><td>" + this.getTPNumber() + " </td></tr>" :"")
+                + (this.is("Customer") ? "<tr class='border'><td>Address</td><td>" + this.getAddress()+ " </td></tr>" :"")
                 + "</table></div>";
     }
 
