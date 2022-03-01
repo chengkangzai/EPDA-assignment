@@ -57,10 +57,12 @@
                         </div>
                         <div class="flex flex-wrap mt-6">
                             <div class="w-1/2">
-
+                                <a href="ForgotPassword.jsp" class="text-gray-500">
+                                    <small>Forgot password?</small>
+                                </a>
                             </div>
                             <div class="w-1/2 text-right">
-                                <a href="Login.jsp" class="text-gray-300">
+                                <a href="Login.jsp" class="text-gray-500">
                                     <small>Already have an Account?</small>
                                 </a>
                             </div>
