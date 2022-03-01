@@ -7,6 +7,7 @@ package controller.report;
 
 import Services.SHelper;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.EJB.MyOrderFacade;
 import model.MyOrder;
+import model.Product;
 
 /**
  *
@@ -69,6 +71,37 @@ public class Index extends HttpServlet {
                 .collect(Collectors.joining(",", "[", "]"));
         SHelper.setSession(request, "report:sales", sales);
         SHelper.setSession(request, "report:dates", dates);
+
+        //get all products
+        List<Product> products = this.myOrderFacade.findAll()
+                .stream()
+                .map(MyOrder::getProducts)
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+
+        //calculate the total sales of all products
+        Double totalSales = orders
+                .stream()
+                .mapToDouble(MyOrder::getTotalPrice)
+                .sum();
+
+        //calculate the percentage of each product per total sales
+        String productPercentage = products
+                .stream()
+                .map(product -> {
+                    Double total = orders
+                            .stream()
+                            .filter(order -> order.getProducts().contains(product))
+                            .mapToDouble(MyOrder::getTotalPrice)
+                            .sum();
+                    return String.format("{x : '%s', y: %.2f}", product.getName(), total / totalSales * 100);
+                })
+                .collect(Collectors.joining(",", "[", "]"));
+        
+
+        SHelper.setSession(request, "report:productPercentage", productPercentage);
+
         request.getRequestDispatcher("Index.jsp").include(request, response);
 
     }
