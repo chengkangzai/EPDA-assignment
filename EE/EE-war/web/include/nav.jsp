@@ -26,6 +26,7 @@
         %>
         <% if (Auth.canAny(request, new ArrayList(Arrays.asList("Managing Staff")))) {
                 out.println(" <a class='btn btn-ghost uppercase' href='/EE-war/Users/Index'>User Mngt</a>");
+                out.println(" <a class='btn btn-ghost uppercase' href='/EE-war/Report/Index'>Report</a>");
             }
         %>
 

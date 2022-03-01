@@ -3,57 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.report;
 
+import Services.SHelper;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.EJB.DeliveryFacade;
-import model.EJB.FeedbackFacade;
 import model.EJB.MyOrderFacade;
-import model.EJB.MyRoleFacade;
-import model.EJB.MyUserFacade;
-import model.EJB.PermissionFacade;
-import model.EJB.ProductFacade;
-import model.EJB.RatingFacade;
-import seeder.AppSeeder;
-import seeder.BootstrapSeeder;
+import model.MyOrder;
 
 /**
  *
  * @author CCK
  */
-@WebServlet(name = "BootstrapApp", urlPatterns = {"/BootstrapApp"})
-public class BootstrapApp extends HttpServlet {
-
-    @EJB
-    private RatingFacade ratingFacade;
-
-    @EJB
-    private ProductFacade productFacade;
+@WebServlet(name = "Report.Index", urlPatterns = {"/Report/Index"})
+public class Index extends HttpServlet {
 
     @EJB
     private MyOrderFacade myOrderFacade;
-
-    @EJB
-    private FeedbackFacade feedbackFacade;
-
-    @EJB
-    private DeliveryFacade deliveryFacade;
-
-    @EJB
-    private PermissionFacade permissionFacade;
-
-    @EJB
-    private MyRoleFacade roleFacade;
-
-    @EJB
-    private MyUserFacade userFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -67,29 +40,37 @@ public class BootstrapApp extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        new BootstrapSeeder(permissionFacade, userFacade, roleFacade).seed();
-        new AppSeeder(deliveryFacade, feedbackFacade, productFacade, ratingFacade, userFacade, myOrderFacade).seed();
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Test</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>My User ... </h1>");
-            this.userFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My role ... </h1>");
-            this.roleFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("<h1>My Permission ... </h1>");
-            this.permissionFacade.findAll().forEach(t -> out.println(t.toString()));
-            out.println("<p>------------------</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        List<MyOrder> orders = this.myOrderFacade.findAll();
+
+        String dates = orders
+                .stream()
+                .map(MyOrder::getCreatedAt)
+                .sorted()
+                .distinct()
+                .map(date -> {
+                    return date.toString();
+                })
+                .collect(Collectors.joining("','", "['", "']"));
+
+        String sales = orders
+                .stream()
+                .map(MyOrder::getCreatedAt)
+                .sorted()
+                .distinct()
+                .map(date -> {
+                    Double total = orders
+                            .stream()
+                            .filter(order -> order.getCreatedAt().equals(date))
+                            .mapToDouble(MyOrder::getTotalPrice)
+                            .sum();
+                    return String.format("%.2f", total);
+                })
+                .collect(Collectors.joining(",", "[", "]"));
+        SHelper.setSession(request, "report:sales", sales);
+        SHelper.setSession(request, "report:dates", dates);
+        request.getRequestDispatcher("Index.jsp").include(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
