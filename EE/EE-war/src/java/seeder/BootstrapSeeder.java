@@ -48,8 +48,8 @@ public class BootstrapSeeder {
         s.add(new MyUser("Super Admin", "pycck@hotmail.com", "password"));
         s.add(new MyUser("Managing Staff", "managing@EE.com", "password"));
         s.add(new MyUser("Delivery Staff", "delivery@EE.com", "password"));
-        for (int i = 1; i < 4; i++) {
-            s.add(new MyUser("Delivery Staff" + i, "delivery" + i + "@EE.com", "password"));
+        for (int i = 1; i <= 4; i++) {
+            s.add(new MyUser("Delivery Staff " + i, "delivery" + i + "@EE.com", "password"));
         }
         s.add(new MyUser("Customer", "customer@EE.com", "password", "TP050000", "Customer Address"));
         for (int i = 1; i <= 20; i++) {
@@ -86,6 +86,7 @@ public class BootstrapSeeder {
         });
 
         p.add(new Permission("Update Profile"));
+        p.add(new Permission("Bootstrap App"));
 
         //sort the p array list 
         p.sort((Permission p1, Permission p2) -> {

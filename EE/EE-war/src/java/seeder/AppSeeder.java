@@ -77,7 +77,7 @@ public class AppSeeder {
     }
 
     private AppSeeder seedFeedback() {
-        List<Delivery> d = this.deliveryfacade.findAll();
+        List<Delivery> d = this.deliveryfacade.findAll().stream().filter(x -> x.getStatus() == Status.DELIVERED).collect(Collectors.toList());
         for (int i = 0; i < d.size(); i++) {
             Delivery delivery = d.get(i);
             Feedback feedback = new Feedback("Feedback " + i, delivery);
@@ -112,7 +112,7 @@ public class AppSeeder {
         List<Product> products = this.productFacade.findAll();
         List<MyUser> users = this.userFacade.findAll().stream().filter(x -> x.getRole().getName().equals("Customer")).collect(Collectors.toList());
 
-        for (int i = 0; i < new Random().nextInt(30); i++) {
+        for (int i = 0; i < new Random().nextInt(30) + 10; i++) {
             Collections.shuffle(products);
             Collections.shuffle(users);
 
@@ -138,15 +138,19 @@ public class AppSeeder {
         List<MyOrder> orders = this.orderFacade.findAll();
         List<MyUser> users = this.userFacade.findAll();
         List<MyUser> deliveryStaff = users.stream().filter(x -> x.getRole().getName().equals("Delivery Staff")).collect(Collectors.toList());
-        List<Status> status = Delivery.getAllStatus();
+        List<Status> statuses = Delivery.getAllStatus();
 
         orders.stream().forEach((order) -> {
+            Status status = statuses.get(new Random().nextInt(statuses.size()));
             Delivery d = new Delivery(
-                    status.get(new Random().nextInt(status.size())),
+                    status,
                     order,
                     order.getPurchaseBy().getAddress(),
                     deliveryStaff.get(new Random().nextInt(deliveryStaff.size()))
             );
+            if (status == Status.DELIVERED) {
+                d.setDeliverAt(new java.sql.Date(new java.util.Date().getTime()));
+            }
             this.deliveryfacade.create(d);
             order.setDelivery(d);
             this.orderFacade.edit(order);
