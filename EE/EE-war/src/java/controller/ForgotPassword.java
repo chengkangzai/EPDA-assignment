@@ -69,6 +69,7 @@ public class ForgotPassword extends HttpServlet {
 
             Integer password = new Random().nextInt(1000000);
             user.setPassword(String.valueOf(password));
+            this.userFacade.edit(user);
             new SendMail()
                     .to(email)
                     .subject("Reset Password")
