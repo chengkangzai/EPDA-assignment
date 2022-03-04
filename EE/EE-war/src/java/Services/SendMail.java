@@ -31,9 +31,9 @@ public class SendMail {
     private final Boolean SSL_ENABLED = true;
     private final Boolean AUTH_ENABLED = true;
 
-    private final String FROM = "";
+    private final String FROM = "CCKAPSTOCK@gmail.com";
     private final String HOST = "smtp.gmail.com";
-    private final String PASSWORD = "";
+    private final String PASSWORD = "AYbBx!86e%n*x&";
 
     public SendMail() {
     }
@@ -49,7 +49,7 @@ public class SendMail {
     }
 
     public SendMail salute() {
-        this.content.add("Hi There!");
+        this.content.add("Hi There !");
         return this;
     }
 
