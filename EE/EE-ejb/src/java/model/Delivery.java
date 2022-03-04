@@ -40,8 +40,6 @@ public class Delivery extends Model implements Serializable {
     private String deliverTo;
     @OneToOne
     private MyUser deliverBy;
-    @OneToOne
-    private Rating rating;
 
     private Date deliverAt;
     @OneToOne(mappedBy = "delivery")
@@ -92,14 +90,6 @@ public class Delivery extends Model implements Serializable {
 
     public void setDeliverAt(Date deliverAt) {
         this.deliverAt = deliverAt;
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
     }
 
     public Date getCreatedAt() {

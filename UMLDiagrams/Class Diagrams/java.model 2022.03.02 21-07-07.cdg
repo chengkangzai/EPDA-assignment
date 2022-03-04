@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="java.model">
+  <ClassDiagramComponents>
+    <Class name="Delivery" package="model" visibility="public" xPosition="20.0" yPosition="20.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="status" type="Status" visibility="private"/>
+        <Field name="order" type="MyOrder" visibility="private"/>
+        <Field name="deliverTo" type="String" visibility="private"/>
+        <Field name="deliverBy" type="MyUser" visibility="private"/>
+        <Field name="rating" type="Rating" visibility="private"/>
+        <Field name="deliverAt" type="Date" visibility="private"/>
+        <Field name="feedback" type="Feedback" visibility="private"/>
+        <Field name="createdAt" type="Date" visibility="private"/>
+        <Field name="deletedAt" type="Date" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="Status" name="status"/>
+          <Argument type="MyOrder" name="order"/>
+          <Argument type="String" name="deliverTo"/>
+          <Argument type="MyUser" name="deliverBy"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getOrder" returnType="MyOrder" visibility="public"/>
+        <Method name="setOrder" returnType="void" visibility="public">
+          <Argument type="MyOrder" name="order"/>
+        </Method>
+        <Method name="getDeliverTo" returnType="String" visibility="public"/>
+        <Method name="setDeliverTo" returnType="void" visibility="public">
+          <Argument type="String" name="deliverTo"/>
+        </Method>
+        <Method name="getDeliverBy" returnType="MyUser" visibility="public"/>
+        <Method name="setDeliverBy" returnType="void" visibility="public">
+          <Argument type="MyUser" name="deliverBy"/>
+        </Method>
+        <Method name="getDeliverAt" returnType="Date" visibility="public"/>
+        <Method name="setDeliverAt" returnType="void" visibility="public">
+          <Argument type="Date" name="deliverAt"/>
+        </Method>
+        <Method name="getRating" returnType="Rating" visibility="public"/>
+        <Method name="setRating" returnType="void" visibility="public">
+          <Argument type="Rating" name="rating"/>
+        </Method>
+        <Method name="getCreatedAt" returnType="Date" visibility="public"/>
+        <Method name="setCreatedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="createdAt"/>
+        </Method>
+        <Method name="getDeletedAt" returnType="Date" visibility="public"/>
+        <Method name="setDeletedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="deletedAt"/>
+        </Method>
+        <Method name="getFeedback" returnType="Feedback" visibility="public"/>
+        <Method name="setFeedback" returnType="void" visibility="public">
+          <Argument type="Feedback" name="feedback"/>
+        </Method>
+        <Method name="getStatus" returnType="Status" visibility="public"/>
+        <Method name="setStatus" returnType="void" visibility="public">
+          <Argument type="Status" name="status"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="statusToSelection" returnType="String" visibility="public" isStatic="true"/>
+        <Method name="getAllStatus" returnType="ArrayList&lt;Status&gt;" visibility="public" isStatic="true"/>
+        <Method name="findStatusByString" returnType="Status" visibility="public" isStatic="true">
+          <Argument type="String" name="status"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="AbstractFacade" package="model.EJB" visibility="public" isAbstract="true" xPosition="320.0" yPosition="20.0">
+      <Fields>
+        <Field name="entityClass" type="Class&lt;T&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="Class&lt;T&gt;" name="entityClass"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected" isAbstract="true"/>
+        <Method name="create" returnType="void" visibility="public">
+          <Argument type="T" name="entity"/>
+        </Method>
+        <Method name="edit" returnType="void" visibility="public">
+          <Argument type="T" name="entity"/>
+        </Method>
+        <Method name="remove" returnType="void" visibility="public">
+          <Argument type="T" name="entity"/>
+        </Method>
+        <Method name="find" returnType="T" visibility="public">
+          <Argument type="Object" name="id"/>
+        </Method>
+        <Method name="findAll" returnType="List&lt;T&gt;" visibility="public"/>
+        <Method name="findRange" returnType="List&lt;T&gt;" visibility="public">
+          <Argument type="int[]" name="range"/>
+        </Method>
+        <Method name="count" returnType="int" visibility="public"/>
+        <Method name="truncate" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="DeliveryFacade" package="model.EJB" visibility="public" xPosition="620.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+        <Method name="findAll" returnType="List&lt;Delivery&gt;" visibility="public"/>
+        <Method name="findAllWithTrashed" returnType="List&lt;Delivery&gt;" visibility="public"/>
+        <Method name="truncate" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="FeedbackFacade" package="model.EJB" visibility="public" xPosition="920.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+      </Methods>
+    </Class>
+    <Class name="MyOrderFacade" package="model.EJB" visibility="public" xPosition="1220.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+        <Method name="findAll" returnType="List&lt;MyOrder&gt;" visibility="public"/>
+        <Method name="findAllWithTrashed" returnType="List&lt;MyOrder&gt;" visibility="public"/>
+        <Method name="truncate" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="MyRoleFacade" package="model.EJB" visibility="public" xPosition="1520.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+      </Methods>
+    </Class>
+    <Class name="MyUserFacade" package="model.EJB" visibility="public" xPosition="1820.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+      </Methods>
+    </Class>
+    <Class name="PermissionFacade" package="model.EJB" visibility="public" xPosition="2120.0" yPosition="20.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+      </Methods>
+    </Class>
+    <Class name="ProductFacade" package="model.EJB" visibility="public" xPosition="20.0" yPosition="420.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+        <Method name="findAll" returnType="List&lt;Product&gt;" visibility="public"/>
+        <Method name="findAllWithTrashed" returnType="List&lt;Product&gt;" visibility="public"/>
+        <Method name="truncate" returnType="void" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="RatingFacade" package="model.EJB" visibility="public" xPosition="320.0" yPosition="420.0">
+      <Fields>
+        <Field name="em" type="EntityManager" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getEntityManager" returnType="EntityManager" visibility="protected"/>
+      </Methods>
+    </Class>
+    <Class name="Feedback" package="model" visibility="public" xPosition="620.0" yPosition="420.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="feedback" type="String" visibility="private"/>
+        <Field name="delivery" type="Delivery" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+        <Constructor visibility="public">
+          <Argument type="String" name="feedback"/>
+          <Argument type="Delivery" name="delivery"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getFeedback" returnType="String" visibility="public"/>
+        <Method name="setFeedback" returnType="void" visibility="public">
+          <Argument type="String" name="feedback"/>
+        </Method>
+        <Method name="getDelivery" returnType="Delivery" visibility="public"/>
+        <Method name="setDelivery" returnType="void" visibility="public">
+          <Argument type="Delivery" name="delivery"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Model" package="model" visibility="public" isAbstract="true" xPosition="920.0" yPosition="420.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="toTd" returnType="String" visibility="public" isAbstract="true">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public" isAbstract="true"/>
+        <Method name="toShowTable" returnType="String" visibility="public" isAbstract="true"/>
+      </Methods>
+    </Class>
+    <Class name="MyOrder" package="model" visibility="public" xPosition="1220.0" yPosition="420.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="products" type="List&lt;Product&gt;" visibility="private"/>
+        <Field name="purchaseBy" type="MyUser" visibility="private"/>
+        <Field name="delivery" type="Delivery" visibility="private"/>
+        <Field name="createdAt" type="Date" visibility="private"/>
+        <Field name="deletedAt" type="Date" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="List&lt;Product&gt;" name="products"/>
+          <Argument type="MyUser" name="purchaseBy"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getPurchaseBy" returnType="MyUser" visibility="public"/>
+        <Method name="setPurchaseBy" returnType="void" visibility="public">
+          <Argument type="MyUser" name="purchaseBy"/>
+        </Method>
+        <Method name="getCreatedAt" returnType="Date" visibility="public"/>
+        <Method name="setCreatedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="createdAt"/>
+        </Method>
+        <Method name="getDeletedAt" returnType="Date" visibility="public"/>
+        <Method name="setDeletedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="deletedAt"/>
+        </Method>
+        <Method name="getProducts" returnType="List&lt;Product&gt;" visibility="public"/>
+        <Method name="setProducts" returnType="void" visibility="public">
+          <Argument type="List&lt;Product&gt;" name="products"/>
+        </Method>
+        <Method name="getDelivery" returnType="Delivery" visibility="public"/>
+        <Method name="setDelivery" returnType="void" visibility="public">
+          <Argument type="Delivery" name="delivery"/>
+        </Method>
+        <Method name="getTotalPrice" returnType="Double" visibility="public"/>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toJSON" returnType="String" visibility="public"/>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="MyRole" package="model" visibility="public" xPosition="1520.0" yPosition="420.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="permissions" type="List&lt;Permission&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getPermissions" returnType="List&lt;Permission&gt;" visibility="public"/>
+        <Method name="setPermissions" returnType="void" visibility="public">
+          <Argument type="List&lt;Permission&gt;" name="permissions"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="MyUser" package="model" visibility="public" xPosition="1820.0" yPosition="420.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="email" type="String" visibility="private"/>
+        <Field name="password" type="String" visibility="private"/>
+        <Field name="TPNumber" type="String" visibility="private"/>
+        <Field name="address" type="String" visibility="private"/>
+        <Field name="role" type="MyRole" visibility="private"/>
+        <Field name="rating" type="Rating" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="email"/>
+          <Argument type="String" name="password"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="String" name="email"/>
+          <Argument type="String" name="password"/>
+          <Argument type="String" name="TPNumber"/>
+          <Argument type="String" name="address"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getRole" returnType="MyRole" visibility="public"/>
+        <Method name="setRole" returnType="void" visibility="public">
+          <Argument type="MyRole" name="role"/>
+        </Method>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getEmail" returnType="String" visibility="public"/>
+        <Method name="setEmail" returnType="void" visibility="public">
+          <Argument type="String" name="email"/>
+        </Method>
+        <Method name="getTPNumber" returnType="String" visibility="public"/>
+        <Method name="setTPNumber" returnType="void" visibility="public">
+          <Argument type="String" name="TPNumber"/>
+        </Method>
+        <Method name="getAddress" returnType="String" visibility="public"/>
+        <Method name="setAddress" returnType="void" visibility="public">
+          <Argument type="String" name="address"/>
+        </Method>
+        <Method name="getRating" returnType="Rating" visibility="public"/>
+        <Method name="setRating" returnType="void" visibility="public">
+          <Argument type="Rating" name="rating"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="getPassword" returnType="String" visibility="public"/>
+        <Method name="setPassword" returnType="void" visibility="public">
+          <Argument type="String" name="password"/>
+        </Method>
+        <Method name="can" returnType="boolean" visibility="public">
+          <Argument type="String" name="permission"/>
+        </Method>
+        <Method name="is" returnType="boolean" visibility="public">
+          <Argument type="String" name="role"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Permission" package="model" visibility="public" xPosition="2120.0" yPosition="420.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="myRoles" type="List&lt;MyRole&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getMyRoles" returnType="List&lt;MyRole&gt;" visibility="public"/>
+        <Method name="setMyRoles" returnType="void" visibility="public">
+          <Argument type="List&lt;MyRole&gt;" name="myRoles"/>
+        </Method>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toHtml" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Product" package="model" visibility="public" xPosition="20.0" yPosition="820.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="name" type="String" visibility="private"/>
+        <Field name="price" type="Double" visibility="private"/>
+        <Field name="rating" type="ArrayList&lt;Rating&gt;" visibility="private"/>
+        <Field name="createdAt" type="Date" visibility="private"/>
+        <Field name="deletedAt" type="Date" visibility="private"/>
+        <Field name="myOrders" type="ArrayList&lt;MyOrder&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="name"/>
+          <Argument type="Double" name="price"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getRating" returnType="ArrayList&lt;Rating&gt;" visibility="public"/>
+        <Method name="setRating" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;Rating&gt;" name="rating"/>
+        </Method>
+        <Method name="getName" returnType="String" visibility="public"/>
+        <Method name="setName" returnType="void" visibility="public">
+          <Argument type="String" name="name"/>
+        </Method>
+        <Method name="getPrice" returnType="Double" visibility="public"/>
+        <Method name="getPriceInString" returnType="String" visibility="public"/>
+        <Method name="getMyOrders" returnType="ArrayList&lt;MyOrder&gt;" visibility="public"/>
+        <Method name="setMyOrders" returnType="void" visibility="public">
+          <Argument type="ArrayList&lt;MyOrder&gt;" name="myOrders"/>
+        </Method>
+        <Method name="setPrice" returnType="void" visibility="public">
+          <Argument type="Double" name="price"/>
+        </Method>
+        <Method name="getCreatedAt" returnType="Date" visibility="public"/>
+        <Method name="setCreatedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="createdAt"/>
+        </Method>
+        <Method name="getDeletedAt" returnType="Date" visibility="public"/>
+        <Method name="setDeletedAt" returnType="void" visibility="public">
+          <Argument type="Date" name="deletedAt"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+        <Method name="toTd" returnType="String" visibility="public">
+          <Argument type="MyUser" name="user"/>
+        </Method>
+        <Method name="toSelection" returnType="String" visibility="public"/>
+        <Method name="toShowTable" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Rating" package="model" visibility="public" xPosition="320.0" yPosition="820.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="id" type="Integer" visibility="private"/>
+        <Field name="star" type="Integer" visibility="private"/>
+        <Field name="product" type="Product" visibility="private"/>
+        <Field name="rateBy" type="MyUser" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="Integer" name="star"/>
+          <Argument type="Product" name="product"/>
+          <Argument type="MyUser" name="rateBy"/>
+        </Constructor>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="getStar" returnType="Integer" visibility="public"/>
+        <Method name="setStar" returnType="void" visibility="public">
+          <Argument type="Integer" name="star"/>
+        </Method>
+        <Method name="getProduct" returnType="Product" visibility="public"/>
+        <Method name="setProduct" returnType="void" visibility="public">
+          <Argument type="Product" name="product"/>
+        </Method>
+        <Method name="getRateBy" returnType="MyUser" visibility="public"/>
+        <Method name="setRateBy" returnType="void" visibility="public">
+          <Argument type="MyUser" name="rateBy"/>
+        </Method>
+        <Method name="getId" returnType="Integer" visibility="public"/>
+        <Method name="setId" returnType="void" visibility="public">
+          <Argument type="Integer" name="id"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="object"/>
+        </Method>
+        <Method name="toString" returnType="String" visibility="public"/>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="rating" source="model.Delivery" target="model.Rating" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="feedback" source="model.Delivery" target="model.Feedback" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Delivery" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.Feedback" target="model.Model"/>
+    <IsRelation name="is" source="model.Delivery" target="model.Model"/>
+    <UseRelation source="model.MyRole" target="model.Permission" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Rating" target="model.Product" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="deliverBy" source="model.Delivery" target="model.MyUser" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.MyRole" target="model.Model"/>
+    <HasRelation name="rating" source="model.Product" target="model.Rating" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="ArrayList&lt;Rating&gt;"/>
+    <UseRelation source="model.Product" target="model.MyOrder" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Feedback" target="model.Delivery" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Rating" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.EJB.MyOrderFacade" target="model.MyOrder" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.EJB.MyUserFacade" target="model.EJB.AbstractFacade"/>
+    <IsRelation name="is" source="model.Product" target="model.Model"/>
+    <UseRelation source="model.MyUser" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.MyUser" target="model.Model"/>
+    <HasRelation name="myRoles" source="model.Permission" target="model.MyRole" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;MyRole&gt;"/>
+    <IsRelation name="is" source="model.EJB.MyOrderFacade" target="model.EJB.AbstractFacade"/>
+    <UseRelation source="model.Product" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyOrder" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="rateBy" source="model.Rating" target="model.MyUser" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="purchaseBy" source="model.MyOrder" target="model.MyUser" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.EJB.ProductFacade" target="model.Product" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.MyOrder" target="model.Model"/>
+    <UseRelation source="model.Model" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.EJB.PermissionFacade" target="model.EJB.AbstractFacade"/>
+    <IsRelation name="is" source="model.EJB.MyRoleFacade" target="model.EJB.AbstractFacade"/>
+    <HasRelation name="rating" source="model.MyUser" target="model.Rating" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="products" source="model.MyOrder" target="model.Product" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;Product&gt;"/>
+    <UseRelation source="model.Delivery" target="model.Feedback" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.EJB.DeliveryFacade" target="model.EJB.AbstractFacade"/>
+    <HasRelation name="delivery" source="model.MyOrder" target="model.Delivery" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Product" target="model.Rating" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="permissions" source="model.MyRole" target="model.Permission" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;Permission&gt;"/>
+    <HasRelation name="product" source="model.Rating" target="model.Product" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyUser" target="model.MyRole" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.EJB.DeliveryFacade" target="model.Delivery" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.EJB.ProductFacade" target="model.EJB.AbstractFacade"/>
+    <HasRelation name="order" source="model.Delivery" target="model.MyOrder" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="myOrders" source="model.Product" target="model.MyOrder" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="ArrayList&lt;MyOrder&gt;"/>
+    <IsRelation name="is" source="model.EJB.FeedbackFacade" target="model.EJB.AbstractFacade"/>
+    <UseRelation source="model.Delivery" target="model.MyOrder" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Delivery" target="model.Rating" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyUser" target="model.Rating" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="role" source="model.MyUser" target="model.MyRole" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyRole" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.Feedback" target="model.MyUser" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyOrder" target="model.Delivery" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="model.MyOrder" target="model.Product" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="delivery" source="model.Feedback" target="model.Delivery" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="model.EJB.RatingFacade" target="model.EJB.AbstractFacade"/>
+    <UseRelation source="model.Permission" target="model.MyRole" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
