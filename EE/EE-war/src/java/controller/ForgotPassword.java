@@ -73,7 +73,7 @@ public class ForgotPassword extends HttpServlet {
             new SendMail()
                     .to(email)
                     .subject("Reset Password")
-                    .salute("Hi there!")
+                    .salute()
                     .content("Your new password is: " + password)
                     .signature()
                     .send();
