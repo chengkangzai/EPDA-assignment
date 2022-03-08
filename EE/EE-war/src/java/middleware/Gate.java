@@ -22,6 +22,7 @@ public class Gate {
     public static String FORBIIDEN = "/403.jsp";
 
     public static void authorise(HttpServletRequest req, HttpServletResponse res, String name) throws ServletException, IOException {
+        System.out.println(Auth.user(req).can("Update Order"));
         if (Auth.user(req) == null) {
             SHelper.redirectTo(req, res, Gate.UNAUTHORIZED);
             return;
