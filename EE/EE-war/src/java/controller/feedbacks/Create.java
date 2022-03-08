@@ -79,6 +79,7 @@ public class Create extends HttpServlet {
             Feedback feedback = new Feedback(feedbackInput, delivery);
             this.feedbackFacade.create(feedback);
             delivery.setFeedback(feedback);
+            this.deliveryFacade.edit(delivery);
             SHelper.back(request, response);
         }
     }

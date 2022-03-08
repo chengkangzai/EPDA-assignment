@@ -128,7 +128,6 @@ public class BootstrapSeeder {
                     return name.equals("Update Delivery")
                             || name.equals("Read Delivery")
                             || name.equals("Read User")
-                            || name.equals("Update Order")
                             || name.equals("Read Order")
                             || name.equals("Update Profile");
                 })

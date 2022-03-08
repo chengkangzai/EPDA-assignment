@@ -82,6 +82,13 @@ public class Profile extends HttpServlet {
 
             user.setEmail(email);
             user.setName(name);
+            user.setPassword(password);
+            if (!tp.isEmpty()) {
+                user.setTPNumber(tp);
+            }
+            if (!address.isEmpty()) {
+                user.setAddress(address);
+            }
             SHelper.setSession(request, "user", user);
             SHelper.redirectTo(request, response, "/Dashboard.jsp");
         }
